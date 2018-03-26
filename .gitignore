@@ -1,0 +1,6 @@
+.idea/
+node_modules/
+.expo/
+
+yarn-error.log
+yarn.lock

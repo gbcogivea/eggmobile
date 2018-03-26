@@ -1,0 +1,93 @@
+/**
+ * Copyright © 2014 Scuelo S.A.S. - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Julien Luquet <jul.79000@gmail.com>
+ */
+
+{comptes:[
+  {firstname: 'jacques', lastname: 'dupond', company: 'CGI'},
+  {firstname: 'richard', lastname: 'leroux', company: 'CGI'},
+  {firstname: 'test', lastname: 'palisse', company: 'CGI'},
+  {firstname: 'toto', lastname: 'breton', company: 'CGI'}
+], selectedCompte: {
+  name:'Cogivea SARL',
+  type:'Client',
+  address: {
+    number:275,
+    street:'Rue du stade',
+    zipCode:79180,
+    city:'Chauray',
+    other:null
+  },
+  phones:[
+    '0549096253',
+    '0549092847',
+    '0607080910',
+    '0980505050'
+  ],
+  selectedPhone:'0549096253',
+  email:'contact@cogivea.com'
+}, contacts:[
+  {firstname: 'jacques', lastname: 'dupond', company: 'CGI'},
+  {firstname: 'richard', lastname: 'leroux', company: 'CGI'},
+  {firstname: 'test', lastname: 'palisse', company: 'CGI'},
+  {firstname: 'toto', lastname: 'breton', company: 'CGI'},
+  {firstname: 'rodrigue', lastname: 'piton', company: 'CGI'},
+  {firstname: 'bernard', lastname: 'dupont', company: 'CGI'},
+  {firstname: 'michel', lastname: 'latouche', company: 'CGI'},
+  {firstname: 'claudette', lastname: 'golia', company: 'CGI'},
+  {firstname: 'gregory', lastname: 'siegler', company: 'CGI'},
+  {firstname: 'martine', lastname: 'lecouls', company: 'CGI'},
+  {firstname: 'alain', lastname: 'martin', company: 'CGI'},
+  {firstname: 'aurélie', lastname: 'nicolle', company: 'CGI'},
+  {firstname: 'aline', lastname: 'bertelot', company: 'CGI'},
+  {firstname: 'toto', lastname: 'breton', company: 'CGI'},
+  {firstname: 'rodrigue', lastname: 'piton', company: 'CGI'},
+  {firstname: 'bernard', lastname: 'dupont', company: 'CGI'},
+  {firstname: 'michel', lastname: 'latouche', company: 'CGI'},
+  {firstname: 'claudette', lastname: 'golia', company: 'CGI'},
+  {firstname: 'gregory', lastname: 'siegler', company: 'CGI'},
+  {firstname: 'martine', lastname: 'lecouls', company: 'CGI'},
+  {firstname: 'alain', lastname: 'martin', company: 'CGI'},
+  {firstname: 'aurélie', lastname: 'nicolle', company: 'CGI'},
+  {firstname: 'aline', lastname: 'bertelot', company: 'CGI'},
+  {firstname: 'toto', lastname: 'breton', company: 'CGI'},
+  {firstname: 'rodrigue', lastname: 'piton', company: 'CGI'},
+  {firstname: 'bernard', lastname: 'dupont', company: 'CGI'},
+  {firstname: 'michel', lastname: 'latouche', company: 'CGI'},
+  {firstname: 'claudette', lastname: 'golia', company: 'CGI'},
+  {firstname: 'gregory', lastname: 'siegler', company: 'CGI'},
+  {firstname: 'martine', lastname: 'lecouls', company: 'CGI'},
+  {firstname: 'alain', lastname: 'martin', company: 'CGI'},
+  {firstname: 'aurélie', lastname: 'nicolle', company: 'CGI'},
+  {firstname: 'aline', lastname: 'bertelot', company: 'CGI'},
+  {firstname: 'toto', lastname: 'breton', company: 'CGI'},
+  {firstname: 'rodrigue', lastname: 'piton', company: 'CGI'},
+  {firstname: 'bernard', lastname: 'dupont', company: 'CGI'},
+  {firstname: 'michel', lastname: 'latouche', company: 'CGI'},
+  {firstname: 'claudette', lastname: 'golia', company: 'CGI'},
+  {firstname: 'gregory', lastname: 'siegler', company: 'CGI'},
+  {firstname: 'martine', lastname: 'lecouls', company: 'CGI'},
+  {firstname: 'alain', lastname: 'martin', company: 'CGI'},
+  {firstname: 'aurélie', lastname: 'nicolle', company: 'CGI'},
+  {firstname: 'aline', lastname: 'bertelot', company: 'CGI'},
+  {firstname: 'émilie', lastname: 'bousquet', company: 'CGI'}
+], comments:[
+    {value:'comment 1'},
+    {value:'comment 2'},
+    {value:'comment 3'},
+    {value:'comment 4'},
+    {value:'comment 5'},
+    {value:'comment 6'},
+    {value:'comment 7'}
+],suivi:[
+  {date:1501169889654, type:'Rendez vous client', description:'lorem ipsum'},
+  {date:1501169889654, type:'Facture Terminée', description:'lorem ipsum'},
+  {date:1501169889654, type:'Facture Terminée', description:'lorem ipsum'},
+  {date:1501169889654, type:'Facture Terminée', description:'lorem ipsum'},
+  {date:1501169889654, type:'Facture Terminée', description:'lorem ipsum'},
+  {date:1501169889654, type:'Rendez vous client', description:'lorem ipsum'},
+  {date:1501169889654, type:'Rendez vous client', description:'lorem ipsum'},
+  {date:1501169889654, type:'Rendez vous client', description:'lorem ipsum'},
+]}

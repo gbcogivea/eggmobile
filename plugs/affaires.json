@@ -1,0 +1,20 @@
+/**
+ * Copyright © 2014 Scuelo S.A.S. - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Julien Luquet <jul.79000@gmail.com>
+ */
+
+{
+  affaires:[
+    {firstname:'jacques', lastname:'dupond', company:'CGI'},
+    {firstname:'richard', lastname:'leroux', company:'CGI'},
+    {firstname:'test', lastname:'palisse', company:'CGI'},
+    {firstname:'toto', lastname:'breton', company:'CGI'},
+    {firstname:'rodrigue', lastname:'piton', company:'CGI'},
+    {firstname:'bernard', lastname:'dupont', company:'CGI'},
+    {firstname:'michel', lastname:'latouche', company:'CGI'},
+    {firstname:'claudette', lastname:'golia', company:'CGI'},
+    {firstname:'gregory', lastname:'siegler', company:'CGI'},
+  ]
+}
