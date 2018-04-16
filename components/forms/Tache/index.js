@@ -17,22 +17,35 @@ import { findAccountForForm } from "../../../actions/comptes";
 import { findContactForForm } from "../../../actions/contacts";
 import { Select, Option } from "react-native-chooser";
 import Button from '../../../components/Button';
+import { addTask, updateEvent, updateTask } from "../../../actions/planning";
 
 class TaskForm extends React.Component {
 
   state = {
-    nom: '',
-    status: 0,
-    statusName: '',
-    priorite: 0,
-    prioriteName: '',
-    dateEcheance: new Date(),
-    heureEcheance: new Date(),
-    compte: '',
-    contact: '',
+    nom: this.props.route.params.task ? this.props.route.params.task.even_nom : '',
+    status: this.props.route.params.task ? this.props.route.params.task.status_id : 0,
+    statusName: this.props.route.params.task ? this.props.route.params.task.status_nom : '',
+    priorite: this.props.route.params.task ? this.props.route.params.task.priorite : 0,
+    prioriteName: this.props.route.params.task ? this.props.route.params.task.priorite_nom : '',
+    dateEcheance: this.props.route.params.task ? this.props.route.params.task.debut : new Date(),
+    heureEcheance: this.props.route.params.task ? this.props.route.params.task.debut_h : new Date(),
+    compte: this.props.route.params.task ? {
+      clt_id: this.props.route.params.task.clt_id,
+      clt_nom: this.props.route.params.task.clt_nom,
+      clt_pre: this.props.route.params.task.clt_pre,
+      clt_cp: this.props.route.params.task.clt_cp,
+      clt_ville: this.props.route.params.task.clt_ville
+    } : {},
+    contact: this.props.route.params.task ? {
+      cct_id: this.props.route.params.task.cct_id,
+      cct_nom: this.props.route.params.task.cct_nom,
+      cct_pre: this.props.route.params.task.cct_pre,
+      cct_cp: this.props.route.params.task.cct_cp,
+      cct_ville: this.props.route.params.task.cct_ville
+    } : {},
     rappel: 0,
-    rappelLabel:'',
-    commentaires: '',
+    rappelLabel: '',
+    commentaires: this.props.route.params.task ? this.props.route.params.task.comm : '',
     comptes: this.props.comptes,
     query: '',
     contacts: this.props.contacts,
@@ -53,40 +66,55 @@ class TaskForm extends React.Component {
   };
 
   _validate = async () => {
-    const {dispatch} = this.props;
+    const {dispatch, connectedUser} = this.props;
+    const contact = this.state.contact;
+    const compte = this.state.compte;
+
     const task = {
-      "even_id": 1,
-      "even_nom": "string",
-      "nmr": "string",
-      "agt_id": 1,
-      "priorite": 1,
-      "priorite_nom": "string",
-      "statut_id": this.state.status,
-      "statut_nom": this.state.statusName,
-      "type_coul_fond": "string",
-      "type_coul_car": "string",
-      "clt_id": 1,
-      "clt_nom": "string",
-      "clt_pre": "string",
-      "clt_nmr": "string",
-      "clt_cp": "string",
-      "clt_ville": "string",
-      "cct_id": 1,
-      "cct_nom": "string",
-      "cct_pre": "string",
-      "cct_cp": "string",
-      "cct_ville": "string",
-      "debut": "2017-10-10",
-      "debut_h": "14:00",
-      "comm": "string",
-      "comm_htm": "string"
+      "even_id": this.props.route.params.task ? this.props.route.params.task.even_id : null,
+      "even_nom": this.state.nom,
+      //"nmr": "string",
+      "agt_id": connectedUser.agt_id,
+      "priorite": this.state.priorite,
+      "priorite_nom": this.state.prioriteName,
+      //"statut_id": this.state.status,
+      //"statut_nom": this.state.statusName,
+      //"type_coul_fond": "string",
+      //"type_coul_car": "string",
+      "clt_id": compte.clt_id,
+      "clt_nom": compte.clt_nom,
+      "clt_pre": compte.clt_pre,
+      "clt_nmr": compte.clt_nmr,
+      "clt_cp": comtpe.clt_cp,
+      "clt_ville": compte.clt_ville,
+      "cct_id": contact.cct_id,
+      "cct_nom": contact.cct_nom,
+      "cct_pre": contact.cct_pre,
+      "cct_cp": contact.cct_cp,
+      "cct_ville": contact.cct_ville,
+      "debut": this.state.dateEcheance,
+      "debut_h": this.state.heureEcheance,
+      "comm": this.props.route.params.task.comm,
+      "comm_htm": this.props.route.params.task.comm
     };
-    //await dispatch(addTask(task));
-    //this.props.navigator.pop();
-    this.props.navigator.showLocalAlert('Erreur lors de l\'ajout d\'une tâche', {
-      text: { color: '#fff' },
-      container: { backgroundColor: '#F44336' },
-    });
+
+    if (this.props.route.params.task) {
+      await dispatch(updateTask(task, this.props.route.params.task.even_id));
+      const message = 'Mise à jour réussie';
+      this.props.navigator.showLocalAlert(message, {
+        text: {color: '#fff'},
+        container: {backgroundColor: '#4BB543'},
+      });
+    } else {
+      await dispatch(addTask(task));
+      const message = 'Tâche Créée';
+      this.props.navigator.showLocalAlert(message, {
+        text: {color: '#fff'},
+        container: {backgroundColor: '#4BB543'},
+      });
+    }
+    //TODO refresh data
+    this.props.navigator.pop();
   };
 
   _findComptes = async (query) => {

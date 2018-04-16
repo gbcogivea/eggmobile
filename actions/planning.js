@@ -33,8 +33,26 @@ export const loadEvents = (day) => {
     };
 };
 
-export const addTask = (account) => {
+export const addEvent = (event) => {
   return (dispatch) => {
-    return customDispatcher(dispatch, 'POST', `/task`, types.ADD_TASK_SUCCESS, account);
+    return customDispatcher(dispatch, 'POST', `/event`, types.ADD_TASK_SUCCESS, event);
+  };
+};
+
+export const updateEvent = (event, even_id) => {
+  return (dispatch) => {
+    return customDispatcher(dispatch, 'PUT', `/event/${even_id}`, types.ADD_TASK_SUCCESS, event);
+  };
+};
+
+export const addTask = (event) => {
+  return (dispatch) => {
+    return customDispatcher(dispatch, 'POST', `/event`, types.ADD_TASK_SUCCESS, event);
+  };
+};
+
+export const updateTask = (event, even_id) => {
+  return (dispatch) => {
+    return customDispatcher(dispatch, 'PUT', `/event/${even_id}`, types.ADD_TASK_SUCCESS, event);
   };
 };

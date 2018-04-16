@@ -14,6 +14,9 @@ import Demo from '../../calendar';
 import DatePicker from 'react-native-datepicker';
 import Button from '../../../components/Button';
 import { Select, Option } from "react-native-chooser";
+import { connect } from "react-redux";
+import { addContact, fetchContacts, updateContact } from "../../../actions/contacts";
+import { addAffaire, fetchAffaires, updateAffaire } from "../../../actions/affaires";
 
 var radio_props = [
   {label: 'param1', value: 0},
@@ -23,19 +26,27 @@ var radio_props = [
 const PickerItem = Picker.Item;
 
 @withNavigation
-export default class Example extends React.Component {
+class Example extends React.Component {
   state = {
-    nom:'',
-    societe:0,
+    nom: this.props.route.params.selectedAffaire ? this.props.route.params.selectedAffaire.aff_nom : '',
+    societe:this.props.route.params.selectedAffaire ? this.props.route.params.selectedAffaire.clt_nom : 0,
     societeLabel:'TODO',
-    compte: {},
-    contact: {},
-    debut: '',
-    cloture: '',
-    caTheorique:0,
-    step:0,
-    stepLabel:'TODO',
-    commentaires:''
+    compte: this.props.route.params.selectedAffaire ? {
+      clt_id: this.props.route.params.selectedAffaire.clt_id,
+      clt_nom:this.props.route.params.selectedAffaire.clt_nom,
+      clt_pre:this.props.route.params.selectedAffaire.clt_pre
+    } : {},
+    contact: this.props.route.params.selectedAffaire ? {
+      cct_id: this.props.route.params.selectedAffaire.cct_id,
+      cct_nom:this.props.route.params.selectedAffaire.cct_nom,
+      cct_pre:this.props.route.params.selectedAffaire.cct_pre
+    } : {},
+    debut: this.props.route.params.selectedAffaire ? this.props.route.params.selectedAffaire.aff_debut : '',
+    cloture: this.props.route.params.selectedAffaire ? this.props.route.params.selectedAffaire.aff_fin : '',
+    caTheorique:this.props.route.params.selectedAffaire ? this.props.route.params.selectedAffaire.ca_t : 0,
+    step:this.props.route.params.selectedAffaire ? this.props.route.params.selectedAffaire.etape_id : 0,
+    stepLabel:this.props.route.params.selectedAffaire ? this.props.route.params.selectedAffaire.etape_nom : 'TODO',
+    commentaires:this.props.route.params.selectedAffaire ? this.props.route.params.selectedAffaire.aff_comm : ''
   };
 
   onValueChange = (value) => {
@@ -44,12 +55,92 @@ export default class Example extends React.Component {
     });
   };
 
-  _validate = () => {
-    const message = this.props.route.params.selectedAffaire ? 'Erreur lors de la mise à jour d\'une affaire' : 'Erreur lors de l\'ajout d\'une affaire';
-    this.props.navigator.showLocalAlert(message, {
-      text: { color: '#fff' },
-      container: { backgroundColor: '#F44336' },
-    });
+  _validate = async () => {
+    const {dispatch, connectedUser} = this.props;
+    const contact = this.state.contact;
+    const compte = this.state.compte;
+
+    const opportunity = {
+      //"clt_nmr": "string",
+      "clt_nom": compte ? compte.clt_nom : "",
+      //"etatclt_id": 2,
+      //"statutclt_id": 2,
+      //"statut_nom": "string",
+      //"clt_raison_id": 0,
+      //"civilite_id": 0,
+      //"clt_comm": "string",
+      //"clt_tel": "string",
+      //"clt_tel2": "string",
+      //"clt_port": "string",
+      //"clt_fax": "string",
+      //"clt_mail": "string",
+      //"clt_site": "string",
+      //"clt_activite": "string",
+      //"clt_intracomm": "string",
+      //"clt_ca": 0,
+      //"clt_effectif": 0,
+      //"clt_siret": "string",
+      //"clt_capital": 0,
+      //"clt_ape": "string",
+      //"clt_ean13": "string",
+      //"clt_nais": "string",
+      //"clt_adr1": "string",
+      //"clt_cp": "string",
+      //"clt_ville": "string",
+      //"pays_id": 0,
+      //"pays_nom": "string",
+      //"etat_id": 0,
+      //"etat_nom": "string",
+      //"clt_geolocalisation": "string",
+      //"lat": 0,
+      //"lng": 0,
+      //"clt_adr_fact": "N",
+      //"fact_nom": "string",
+      //"fact_adr1": "string",
+      //"fact_cp": "string",
+      //"fact_ville": "string",
+      //"fact_pays_id": 0,
+      //"fact_pays_nom": "string",
+      //"fact_etat_id": 0,
+      //"fact_etat_nom": "string",
+      //"clt_adr_liv": "N",
+      //"liv_nom": "string",
+      //"liv_adr1": "string",
+      //"liv_cp": "string",
+      //"liv_ville": "string",
+      //"liv_pays_id": 0,
+      //"liv_pays_nom": "string",
+      //"liv_etat_id": 0,
+      //"liv_etat_nom": "string",
+      //"comptacl_id": "string",
+      //"comptafr_id": "string",
+      //"clt_rem_pourcent": 0,
+      //"clt_rem_somme": 0,
+      //"clt_exotva": "N",
+      //"clt_lang": "FR",
+      //"condrglt_id": 0,
+      //"mode_rglt_id": 0,
+      //"cgv_id": 0,
+      "clt_agt_ori": connectedUser.agt_id
+    };
+
+    if (this.props.route.params.selectedAffaire) {
+      await dispatch(updateAffaire(opportunity, this.props.route.params.selectedAffaire.aff_id));
+      const message = 'Mise à jour réussie';
+      this.props.navigator.showLocalAlert(message, {
+        text: {color: '#fff'},
+        container: {backgroundColor: '#4BB543'},
+      });
+    } else {
+      await dispatch(addAffaire(opportunity));
+      const message = 'Affaire Créée';
+      this.props.navigator.showLocalAlert(message, {
+        text: {color: '#fff'},
+        container: {backgroundColor: '#4BB543'},
+      });
+    }
+    await dispatch(fetchAffaires());
+    this.props.navigator.pop();
   };
 
   render() {
@@ -153,3 +244,17 @@ const styles = StyleSheet.create({
     marginTop: 15,
   }
 });
+
+const mapStateToProps = (state) => {
+  const {renderReducer} = state;
+  return {
+    states: renderReducer.states,
+    status: renderReducer.status,
+    legalStatus: renderReducer.legalStatus,
+    countries: renderReducer.countries,
+    noteTypes: renderReducer.noteTypes,
+    connectedUser: renderReducer.connectedUser
+  }
+};
+
+export default connect(mapStateToProps)(Example);

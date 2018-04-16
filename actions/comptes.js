@@ -69,6 +69,12 @@ export const addAccount = (account) => {
     };
 };
 
+export const updateAccount = (account, clt_id) => {
+  return (dispatch) => {
+    return customDispatcher(dispatch, 'PUT', `/account/${clt_id}`, types.ADD_COMPTES_SUCCESS, account);
+  };
+};
+
 export const findAccount = (searchValue, start, length) => {
     return (dispatch) => {
         return customDispatcher(dispatch, 'GET', `/account?start=${start}&length=${length}&search=[{"field":"clt_nom","var":"${searchValue}","sens":"co"}]`, types.SEARCH_COMPTES_SUCCESS);

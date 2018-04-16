@@ -10,7 +10,7 @@ import { View, StyleSheet, Text, ScrollView, Picker } from 'react-native';
 import { Toolbar } from 'react-native-material-ui';
 import { Form, Item, Input, Label, Textarea } from 'native-base';
 import { connect } from "react-redux";
-import { addAccount, fetchComptesPage } from "../../../actions/comptes";
+import { addAccount, fetchComptesPage, updateAccount } from "../../../actions/comptes";
 import { Router } from "../../../main";
 import { withNavigation } from '@expo/ex-navigation';
 import Button from '../../../components/Button';
@@ -66,6 +66,7 @@ class CompteForm extends React.Component {
   };
 
   _validate = async () => {
+    const {dispatch, connectedUser} = this.props;
     const account = {
       "clt_nmr": this.state.prenom,
       "clt_nom": this.state.nom,
@@ -125,17 +126,25 @@ class CompteForm extends React.Component {
       //"condrglt_id": 0,
       //"mode_rglt_id": 0,
       //"cgv_id": 0,
-      //"clt_agt_ori": 0
+      "clt_agt_ori": connectedUser.agt_id
     };
-    const {dispatch} = this.props;
-    //await dispatch(addAccount(account));
+    if(this.props.route.params.selectedCompte) {
+      await dispatch(updateAccount(account, this.props.route.params.selectedCompte.clt_id));
+      const message = 'Mise à jour réussie';
+      this.props.navigator.showLocalAlert(message, {
+        text: { color: '#fff' },
+        container: { backgroundColor: '#4BB543' },
+      });
+    } else {
+      await dispatch(addAccount(account));
+      const message = 'Compte Créé';
+      this.props.navigator.showLocalAlert(message, {
+        text: { color: '#fff' },
+        container: { backgroundColor: '#4BB543' },
+      });
+    }
     await dispatch(fetchComptesPage(0, 10));
-    //TODO mettre un message pour dire qu'il est créé
-    const message = this.props.route.params.selectedCompte ? 'Erreur lors de la modification du Compte' : 'Erreur lors de l\'ajout d\'un Compte';
-    this.props.navigator.showLocalAlert(message, {
-      text: { color: '#fff' },
-      container: { backgroundColor: '#F44336' },
-    });
+    this.props.navigator.pop();
   };
 
   render() {
@@ -314,7 +323,8 @@ const mapStateToProps = (state) => {
     status: renderReducer.status,
     legalStatus: renderReducer.legalStatus,
     countries: renderReducer.countries,
-    noteTypes: renderReducer.noteTypes
+    noteTypes: renderReducer.noteTypes,
+    connectedUser: renderReducer.connectedUser
   }
 };
 

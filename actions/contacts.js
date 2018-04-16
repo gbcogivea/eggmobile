@@ -96,3 +96,9 @@ export const addContact = (contact) => {
         return customDispatcher(dispatch, 'POST', `/contact`, types.ADD_CONTACTS_SUCCESS, contact);
     };
 };
+
+export const updateContact = (contact, cct_id) => {
+  return (dispatch) => {
+    return customDispatcher(dispatch, 'PUT', `/contact/${cct_id}`, types.ADD_CONTACTS_SUCCESS, contact);
+  };
+};

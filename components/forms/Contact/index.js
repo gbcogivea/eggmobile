@@ -10,8 +10,8 @@ import { View, Text, ScrollView, Picker, TouchableOpacity, StyleSheet } from 're
 import { Toolbar } from 'react-native-material-ui';
 import { Form, Item, Input, Label, Textarea } from 'native-base';
 import { connect } from "react-redux";
-import { fetchContacts, addContact } from "../../../actions/contacts";
-import { findAccountForForm } from "../../../actions/comptes";
+import { fetchContacts, addContact, updateContact } from "../../../actions/contacts";
+import { addAccount, findAccountForForm } from "../../../actions/comptes";
 import Autocomplete from 'react-native-autocomplete-input';
 import { Select, Option } from "react-native-chooser";
 //TODO enlever la barre sur android et fermer la selection sur la perte du focus
@@ -20,16 +20,16 @@ import { fetchSources } from "../../../actions/render";
 
 class ContactForm extends React.Component {
   state = {
-    civilite: 0,
-    civiliteLabel: 'Civilité',
-    nom: '',
-    prenom: '',
-    telephone: '',
-    mobile: '',
-    email: '',
-    affiliation: {},
-    telephone2: '',
-    fax: '',
+    civilite: this.props.route.params.profile ? this.props.route.params.profile.civilite_id : 0,
+    civiliteLabel: this.props.route.params.profile ? this.props.route.params.profile.civilite_nom : 'Civilité',
+    nom: this.props.route.params.profile ? this.props.route.params.profile.cct_nom : '',
+    prenom: this.props.route.params.profile ? this.props.route.params.profile.cct_nom : '',
+    telephone: this.props.route.params.profile ? this.props.route.params.profile.cct_tel : '',
+    mobile: this.props.route.params.profile ? this.props.route.params.profile.cct_port : '',
+    email: this.props.route.params.profile ? this.props.route.params.profile.cct_mail : '',
+    affiliation: this.props.route.params.profile ? {} : {},
+    telephone2: this.props.route.params.profile ? this.props.route.params.profile.cct_tel2 : '',
+    fax: this.props.route.params.profile ? this.props.route.params.profile.cct_fax : '',
     source: 0,
     sourceLabel: 'Source',
     sourcesNom: '',
@@ -71,6 +71,8 @@ class ContactForm extends React.Component {
   }
 
   _validate = async () => {
+
+    const {dispatch} = this.props;
     const contact = {
       //"cct_id": 1,
       "cct_nom": this.state.nom,
@@ -98,14 +100,23 @@ class ContactForm extends React.Component {
       //"etat_nom": "string",
       //"photo": "string"
     };
-    const {dispatch} = this.props;
-    //await dispatch(addContact(contact));
+    if (this.props.route.params.profile) {
+      await dispatch(updateContact(contact, this.props.route.params.profile.cct_id));
+      const message = 'Mise à jour réussie';
+      this.props.navigator.showLocalAlert(message, {
+        text: {color: '#fff'},
+        container: {backgroundColor: '#4BB543'},
+      });
+    } else {
+      await dispatch(addContact(contact));
+      const message = 'Contact Créé';
+      this.props.navigator.showLocalAlert(message, {
+        text: {color: '#fff'},
+        container: {backgroundColor: '#4BB543'},
+      });
+    }
     await dispatch(fetchContacts());
-    const message = this.props.route.params.profile ? 'Erreur lors de la modification d\'un contact' : 'Erreur lors de l\'ajout d\'un contact';
-    this.props.navigator.showLocalAlert(message, {
-      text: { color: '#fff' },
-      container: { backgroundColor: '#F44336' },
-    });
+    this.props.navigator.pop();
   };
 
   render() {
@@ -199,7 +210,8 @@ class ContactForm extends React.Component {
             <Label>Commentaires</Label>
             <Textarea onChangeText={(text) => this.setState({commentaires: text})}/>
           </Item>
-          <Button onPress={() => this._validate()} accent title={this.props.route.params.profile ? 'Mettre à jour' : 'Valider'}
+          <Button onPress={() => this._validate()} accent
+                  title={this.props.route.params.profile ? 'Mettre à jour' : 'Valider'}
                   backgroundColor={'#2196F3'} color={'#FFF'}/>
         </ScrollView>
       </View>

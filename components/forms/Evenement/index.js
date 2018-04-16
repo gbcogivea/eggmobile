@@ -19,6 +19,8 @@ import { fetchEventStatus, fetchEventType, fetchSources } from "../../../actions
 import { findAccountForForm } from "../../../actions/comptes";
 import { findContactForForm } from "../../../actions/contacts";
 import Button from '../../../components/Button';
+import { addAffaire, fetchAffaires, updateAffaire } from "../../../actions/affaires";
+import { updateEvent } from "../../../actions/planning";
 
 var radio_props = [
   {label: 'param1', value: 0},
@@ -29,25 +31,37 @@ const PickerItem = Picker.Item;
 
 class Event extends React.Component {
   state = {
-    nom: '',
-    debut: '',
-    fin: '',
-    type: 0,
-    typeLabel: 'Type',
-    rappel: 0,
-    rappelLabel: 'Rappel',
-    compte: {},
-    contact: {},
-    lieu: '',
-    commentaires: '',
+    nom: this.props.route.params.event ? this.props.route.params.event.even_nom : '',
+    debut: this.props.route.params.event ? this.props.route.params.event.debut : '',
+    fin: this.props.route.params.event ? this.props.route.params.event.fin : '',
+    type: this.props.route.params.event ? this.props.route.params.event.type_id : 0,
+    typeLabel: this.props.route.params.event ? this.props.route.params.event.type_nom : 'Type',
+    //rappel: this.props.route.params.event ? this.props.route.params.event :  0,
+    //rappelLabel: this.props.route.params.event ? this.props.route.params.event :  'Rappel',
+    compte: this.props.route.params.event ? {
+      clt_id: this.props.route.params.event.clt_id,
+      clt_nom: this.props.route.params.event.clt_nom,
+      clt_pre: this.props.route.params.event.clt_pre,
+      clt_cp: this.props.route.params.event.clt_cp,
+      clt_ville: this.props.route.params.event.clt_ville
+    } : {},
+    contact: this.props.route.params.event ? {
+      cct_id: this.props.route.params.event.cct_id,
+      cct_nom: this.props.route.params.event.cct_nom,
+      cct_pre: this.props.route.params.event.cct_pre,
+      cct_cp: this.props.route.params.event.cct_cp,
+      cct_ville: this.props.route.params.event.cct_ville
+    } : {},
+    lieu: this.props.route.params.event ? this.props.route.params.event.lieu : '',
+    commentaires: this.props.route.params.event ? this.props.route.params.event.comm : '',
     status: 0,
-    statusLabel:'Status',
+    statusLabel: 'Status',
     step: 0,
     stepLabel: 'TODO',
-    canal:0,
+    canal: 0,
     canalLabel: 'TODO',
     source: 0,
-    sourceLabel:'Source'
+    sourceLabel: 'Source'
   };
 
   async componentWillMount() {
@@ -63,11 +77,61 @@ class Event extends React.Component {
     });
   };
 
-  _validate = () => {
-    this.props.navigator.showLocalAlert('Erreur lors de l\'ajout d\'un événement', {
-      text: { color: '#fff' },
-      container: { backgroundColor: '#F44336' },
-    });
+  _validate = async () => {
+    const {dispatch, connectedUser} = this.props;
+    const contact = this.state.contact;
+    const compte = this.state.compte;
+
+    const event = {
+      "even_nom": this.state.nom,
+      "agt_id": connectedUser.agt_id,
+      "type_id": this.state.type,
+      "type_nom": this.state.typeLabel,
+      //"type_coul_fond": "string",
+      //"type_coul_car": "string",
+      "clt_id": compte.clt_id,
+      "clt_nom": compte.clt_nom,
+      "clt_pre": compte.clt_pre,
+      "clt_nmr": compte.clt_nmr,
+      "clt_cp": comtpe.clt_cp,
+      "clt_ville": compte.clt_ville,
+      "cct_id": contact.cct_id,
+      "cct_nom": contact.cct_nom,
+      "cct_pre": contact.cct_pre,
+      "cct_cp": contact.cct_cp,
+      "cct_ville": contact.cct_ville,
+      //"source_id": 0,
+      //"source_nom": "string",
+      //"aff_id": this.props.route.params.event ? this.props.route.params.event.aff_id : null,
+      //"aff_nom": "string",
+      "debut": this.state.debut,
+      //"debut_h": "14:00",
+      "fin": this.state.fin,
+      //"fin_h": "14:00",
+      "comm": this.state.commentaires,
+      "comm_htm": this.state.commentaires,
+      "fait": "N",
+      //"lieu": "string",
+      //"lien": "string"
+    };
+
+    if (this.props.route.params.event) {
+      await dispatch(updateEvent(event, this.props.route.params.event.even_id));
+      const message = 'Mise à jour réussie';
+      this.props.navigator.showLocalAlert(message, {
+        text: {color: '#fff'},
+        container: {backgroundColor: '#4BB543'},
+      });
+    } else {
+      await dispatch(addEvent(event));
+      const message = 'Evénement Créée';
+      this.props.navigator.showLocalAlert(message, {
+        text: {color: '#fff'},
+        container: {backgroundColor: '#4BB543'},
+      });
+    }
+    //TODO refresh data
+    this.props.navigator.pop();
   };
 
   _findComptes = async (query) => {
@@ -134,7 +198,7 @@ class Event extends React.Component {
               this.setState({fin: date})
             }}/>
           <Select
-            defaultText={this.state.typeLabel} optionListStyle = {styles.options}
+            defaultText={this.state.typeLabel} optionListStyle={styles.options}
             style={styles.select}
             onSelect={(itemValue, itemLabel) => this.setState({type: itemValue, typeLabel: itemLabel})}>
             {this.props.eventTypes.map((state, index) => {
@@ -142,7 +206,7 @@ class Event extends React.Component {
             })}
           </Select>
           <Select
-            defaultText={this.state.rappelLabel} optionListStyle = {styles.options}
+            defaultText={this.state.rappelLabel} optionListStyle={styles.options}
             style={styles.select}
             onSelect={(itemValue, itemLabel) => this.setState({rappel: itemValue, rappelLabel: itemLabel})}>
             <Option value={0}>Notifications</Option>
@@ -216,7 +280,7 @@ class Event extends React.Component {
             <Textarea onChangeText={(text) => this.setState({nom: text})}/>
           </Item>
           <Select
-            defaultText={this.state.statusLabel} optionListStyle = {styles.options}
+            defaultText={this.state.statusLabel} optionListStyle={styles.options}
             style={styles.select}
             onSelect={(itemValue, itemLabel) => this.setState({status: itemValue, statusLabel: itemLabel})}>
             {this.props.eventStatus.map((state, index) => {
@@ -224,19 +288,19 @@ class Event extends React.Component {
             })}
           </Select>
           <Select
-            defaultText={this.state.stepLabel} optionListStyle = {styles.options}
+            defaultText={this.state.stepLabel} optionListStyle={styles.options}
             style={styles.select}
             onSelect={(itemValue, itemLabel) => this.setState({step: itemValue, stepLabel: itemLabel})}>
 
           </Select>
           <Select
-            defaultText={this.state.canalLabel} optionListStyle = {styles.options}
+            defaultText={this.state.canalLabel} optionListStyle={styles.options}
             style={styles.select}
             onSelect={(itemValue, itemLabel) => this.setState({canal: itemValue, canalLabel: itemLabel})}>
 
           </Select>
           <Select
-            defaultText={this.state.sourceLabel} optionListStyle = {styles.options}
+            defaultText={this.state.sourceLabel} optionListStyle={styles.options}
             style={styles.select}
             onSelect={(itemValue, itemLabel) => this.setState({source: itemValue, sourceLabel: itemLabel})}>
             {this.props.sources.map((state, index) => {
@@ -260,13 +324,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   options: {
-    width:'100%',
-    height:'100%'
+    width: '100%',
+    height: '100%'
   },
   select: {
-    width:'95%',
-    margin:10,
-    borderColor:'grey'
+    width: '95%',
+    margin: 10,
+    borderColor: 'grey'
   },
   row: {
     height: 40,

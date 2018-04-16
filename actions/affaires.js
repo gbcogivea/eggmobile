@@ -16,10 +16,17 @@ const affaireEndpoint = '/api/affaire.php';
  * @param affaire
  * @returns {*}
  */
-/*export const addAffaire = (affaire) => {
-    //return utils.query(affaireEndpoint, { affaire:affaire }, types.ADD_AFFAIRE_SUCCESS, 'POST');
-    return utils.bouchon(affaires.affaires, types.ADD_AFFAIRE_SUCCESS, 'affaire ajoutée');
-};*/
+export const addAffaire = (affaire) => {
+  return (dispatch) => {
+    return customDispatcher(dispatch, 'POST', '/opportunity', types.ADD_AFFAIRE_SUCCESS, affaire);
+  };
+};
+
+export const updateAffaire = (affaire, aff_id) => {
+  return (dispatch) => {
+    return customDispatcher(dispatch, 'PUT', `/opportunity/${aff_id}`, types.ADD_AFFAIRE_SUCCESS, affaire);
+  };
+};
 
 /**
  * @name deleteAffaire
