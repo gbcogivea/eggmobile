@@ -80,7 +80,7 @@ export const contact = (contact) => {
 
   try {
     message += validate(contact.cct_nom, 'le nom', 'string', true);
-    message += validate(contact.civilite_id, 'la civilité', 'string', true);
+    message += validate(contact.civilite_id, 'la civilité', 'numeric', true);
     message += validate(contact.cct_tel, 'le téléphone', 'number', true);
     message += validate(contact.cct_tel2, 'le second téléphone', 'number', true);
     message += validate(contact.cct_port, 'le portable', 'number', true);
@@ -102,7 +102,7 @@ export const compte = (compte) => {
   let message = defaultMessage;
 
   try {
-    message += validate(compte.clt_nmr, 'le numéro', 'number', true);
+    message += validate(compte.clt_nmr, 'la raison sociale', 'string', true);
     message += validate(compte.clt_nom, 'le nom', 'string', true);
     message += validate(compte.etatclt_id, 'l\'état', 'number', true);
     message += validate(compte.statutclt_id, 'le status', 'number', true);

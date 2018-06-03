@@ -10,45 +10,35 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import { Form, Item, Input, Label, Picker, Textarea } from 'native-base';
 import { Toolbar } from 'react-native-material-ui';
 import { withNavigation } from '@expo/ex-navigation';
-import Demo from '../../calendar';
 import DatePicker from 'react-native-datepicker';
 import Button from '../../../components/Button';
 import { Select, Option } from "react-native-chooser";
 import { connect } from "react-redux";
-import { addContact, fetchContacts, updateContact } from "../../../actions/contacts";
 import { addAffaire, fetchAffaires, updateAffaire } from "../../../actions/affaires";
-import {affaire as validator} from '../../../utils/validators';
-import { addAccount, fetchComptesPage, updateAccount } from "../../../actions/comptes";
-
-var radio_props = [
-  {label: 'param1', value: 0},
-  {label: 'param2', value: 1}
-];
-
-const PickerItem = Picker.Item;
+import { affaire as validator } from '../../../utils/validators';
 
 @withNavigation
 class Example extends React.Component {
   state = {
     nom: this.props.route.params.selectedAffaire ? this.props.route.params.selectedAffaire.aff_nom : '',
-    societe:this.props.route.params.selectedAffaire ? this.props.route.params.selectedAffaire.clt_nom : 0,
-    societeLabel:'TODO',
+    societe: this.props.route.params.selectedAffaire ? this.props.route.params.selectedAffaire.clt_nom : 0,
+    societeLabel: 'TODO',
     compte: this.props.route.params.selectedAffaire ? {
       clt_id: this.props.route.params.selectedAffaire.clt_id,
-      clt_nom:this.props.route.params.selectedAffaire.clt_nom,
-      clt_pre:this.props.route.params.selectedAffaire.clt_pre
+      clt_nom: this.props.route.params.selectedAffaire.clt_nom,
+      clt_pre: this.props.route.params.selectedAffaire.clt_pre
     } : {},
     contact: this.props.route.params.selectedAffaire ? {
       cct_id: this.props.route.params.selectedAffaire.cct_id,
-      cct_nom:this.props.route.params.selectedAffaire.cct_nom,
-      cct_pre:this.props.route.params.selectedAffaire.cct_pre
+      cct_nom: this.props.route.params.selectedAffaire.cct_nom,
+      cct_pre: this.props.route.params.selectedAffaire.cct_pre
     } : {},
     debut: this.props.route.params.selectedAffaire ? this.props.route.params.selectedAffaire.aff_debut : '',
     cloture: this.props.route.params.selectedAffaire ? this.props.route.params.selectedAffaire.aff_fin : '',
-    caTheorique:this.props.route.params.selectedAffaire ? this.props.route.params.selectedAffaire.ca_t : 0,
-    step:this.props.route.params.selectedAffaire ? this.props.route.params.selectedAffaire.etape_id : 0,
-    stepLabel:this.props.route.params.selectedAffaire ? this.props.route.params.selectedAffaire.etape_nom : 'TODO',
-    commentaires:this.props.route.params.selectedAffaire ? this.props.route.params.selectedAffaire.aff_comm : ''
+    caTheorique: this.props.route.params.selectedAffaire ? this.props.route.params.selectedAffaire.ca_t : 0,
+    step: this.props.route.params.selectedAffaire ? this.props.route.params.selectedAffaire.etape_id : 0,
+    stepLabel: this.props.route.params.selectedAffaire ? this.props.route.params.selectedAffaire.etape_nom : 'TODO',
+    commentaires: this.props.route.params.selectedAffaire ? this.props.route.params.selectedAffaire.aff_comm : ''
   };
 
   onValueChange = (value) => {
@@ -149,7 +139,8 @@ class Example extends React.Component {
         text: {color: '#fff'},
         container: {backgroundColor: '#F44336'},
       });
-    };
+    }
+    ;
   };
 
   render() {
@@ -160,18 +151,16 @@ class Example extends React.Component {
           onLeftElementPress={() => {
             this.props.navigator.pop();
           }}
-          centerElement={this.props.route.params.selectedAffaire ? 'Modifier une Affaire' : 'Créer une Affaire'}
-        />
+          centerElement={this.props.route.params.selectedAffaire ? 'Modifier une Affaire' : 'Créer une Affaire'}/>
         <ScrollView>
           <Item style={styles.item} floatingLabel last>
             <Label>Nom</Label>
             <Input/>
           </Item>
           <Select
-            defaultText={this.state.societeLabel} optionListStyle = {styles.options}
+            defaultText={this.state.societeLabel} optionListStyle={styles.options}
             style={styles.select}
             onSelect={(itemValue, itemLabel) => this.setState({societe: itemValue, societeLabel: itemLabel})}>
-
           </Select>
           <Item style={styles.item} floatingLabel last>
             <Label>Compte</Label>
@@ -205,19 +194,19 @@ class Example extends React.Component {
             }}/>
           <Item style={styles.item} floatingLabel last>
             <Label>CA théorique</Label>
-            <Input/>
+            <Input keyboardType={'numeric'}/>
           </Item>
           <Select
-            defaultText={this.state.stepLabel} optionListStyle = {styles.options}
+            defaultText={this.state.stepLabel} optionListStyle={styles.options}
             style={styles.select}
             onSelect={(itemValue, itemLabel) => this.setState({step: itemValue, stepLabel: itemLabel})}>
-
           </Select>
           <Item style={styles.item} floatingLabel last>
             <Label>Commentaires</Label>
             <Textarea/>
           </Item>
-          <Button onPress={() => this._validate()} accent title={this.props.route.params.selectedAffaire ? 'Mettre à jour' : 'Valider'}
+          <Button onPress={() => this._validate()} accent
+                  title={this.props.route.params.selectedAffaire ? 'Mettre à jour' : 'Valider'}
                   backgroundColor={'#2196F3'} color={'#FFF'}/>
         </ScrollView>
       </View>
@@ -234,13 +223,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   options: {
-    width:'100%',
-    height:'100%'
+    width: '100%',
+    height: '100%'
   },
   select: {
-    width:'95%',
-    margin:10,
-    borderColor:'grey'
+    width: '95%',
+    margin: 10,
+    borderColor: 'grey'
   },
   row: {
     height: 40,

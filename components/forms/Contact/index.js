@@ -6,15 +6,14 @@
  */
 
 import React from 'react';
-import { View, Text, ScrollView, Picker, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { Toolbar } from 'react-native-material-ui';
-import { Form, Item, Input, Label, Textarea } from 'native-base';
+import { Item, Input, Label } from 'native-base';
 import { connect } from "react-redux";
 import { fetchContacts, addContact, updateContact } from "../../../actions/contacts";
-import { addAccount, findAccountForForm } from "../../../actions/comptes";
+import { findAccountForForm } from "../../../actions/comptes";
 import Autocomplete from 'react-native-autocomplete-input';
 import { Select, Option } from "react-native-chooser";
-//TODO enlever la barre sur android et fermer la selection sur la perte du focus
 import Button from '../../../components/Button';
 import { fetchSources } from "../../../actions/render";
 import { contact as validator } from "../../../utils/validators";
@@ -75,31 +74,17 @@ class ContactForm extends React.Component {
 
     const {dispatch} = this.props;
     const contact = {
-      //"cct_id": 1,
       "cct_nom": this.state.nom,
+      "cct_pre": this.state.prenom,
       "civilite_id": this.state.civilite,
-      "civilite_nom": this.state.prenom,
-      //"fonction_id": 0,
-      //"fonction_nom": "string",
+      "civilite_nom": this.state.civiliteLabel,
       "cct_tel": this.state.telephone,
       "cct_tel2": this.state.telephone2,
       "cct_port": this.state.mobile,
       "cct_fax": this.state.fax,
       "cct_mail": this.state.email,
-      //"cct_site": "string",
-      //"cct_activite": "string",
       "cct_comm": this.state.commentaires,
-      "cct_source_id": this.state.sources,
-      //"cct_nais": "string",
-      //"cct_geolocalisation": "string",
-      //"cct_adr1": "string",
-      //"cct_cp": "string",
-      //"cct_ville": "string",
-      //"pays_id": 0,
-      //"pays_nom": "string",
-      //"etat_id": 0,
-      //"etat_nom": "string",
-      //"photo": "string"
+      "cct_source_id": this.state.source
     };
     try {
       validator(contact);
@@ -139,8 +124,6 @@ class ContactForm extends React.Component {
           }}
           centerElement={this.props.route.params.profile ? 'Modifier un Contact' : 'Créer un Contact'}/>
         <ScrollView>
-          {/*TODO mettre le premier champ en focus
-                  Vérifier que des champs se cachent ou pas et mettre par défault civilité*/}
           <Text style={styles.secondaryText}>Informations Personnelles :</Text>
           <Select
             defaultText={this.state.civiliteLabel} optionListStyle={styles.options}
@@ -187,25 +170,25 @@ class ContactForm extends React.Component {
                         }}/>
           <Item style={styles.item} floatingLabel last>
             <Label>Téléphone</Label>
-            <Input onChangeText={(text) => this.setState({telephone: text})}/>
+            <Input keyboardType={'phone-pad'} onChangeText={(text) => this.setState({telephone: text})}/>
           </Item>
           <Item style={styles.item} floatingLabel last>
             <Label>Mobile</Label>
-            <Input onChangeText={(text) => this.setState({mobile: text})}/>
+            <Input keyboardType={'phone-pad'} onChangeText={(text) => this.setState({mobile: text})}/>
           </Item>
           <Item style={styles.item} floatingLabel last>
             <Label>Email</Label>
-            <Input onChangeText={(text) => this.setState({email: text})}/>
+            <Input keyboardType={'email-address'} onChangeText={(text) => this.setState({email: text})}/>
           </Item>
 
           <Text style={styles.secondaryText}>Informations Complémentaires :</Text>
           <Item style={styles.item} floatingLabel last>
             <Label>Téléphone 2</Label>
-            <Input onChangeText={(text) => this.setState({telephone2: text})}/>
+            <Input keyboardType={'phone-pad'} onChangeText={(text) => this.setState({telephone2: text})}/>
           </Item>
           <Item style={styles.item} floatingLabel last>
             <Label>Fax</Label>
-            <Input onChangeText={(text) => this.setState({fax: text})}/>
+            <Input keyboardType={'phone-pad'} onChangeText={(text) => this.setState({fax: text})}/>
           </Item>
           <Select
             defaultText={this.state.sourceLabel} optionListStyle={styles.options}
@@ -217,7 +200,7 @@ class ContactForm extends React.Component {
           </Select>
           <Item style={styles.item} floatingLabel last>
             <Label>Commentaires</Label>
-            <Textarea onChangeText={(text) => this.setState({commentaires: text})}/>
+            <Input onChangeText={(text) => this.setState({commentaires: text})}/>
           </Item>
           <Button onPress={() => this._validate()} accent
                   title={this.props.route.params.profile ? 'Mettre à jour' : 'Valider'}

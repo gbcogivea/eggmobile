@@ -70,8 +70,9 @@ class CompteForm extends React.Component {
   _validate = async () => {
     const {dispatch, connectedUser} = this.props;
     const account = {
-      "clt_nmr": this.state.prenom,
+      "clt_nmr": this.state.nom,
       "clt_nom": this.state.nom,
+      "clt_pre": this.state.prenom,
       "etatclt_id": parseInt(this.state.etat),
       "statutclt_id": parseInt(this.state.status),
       "statut_nom": this.state.statusNom,
@@ -132,6 +133,7 @@ class CompteForm extends React.Component {
     };
     try {
       validator(account);
+      console.log(account);
       if (this.props.route.params.selectedCompte) {
         await dispatch(updateAccount(account, this.props.route.params.selectedCompte.clt_id));
         const message = 'Mise à jour réussie';
@@ -217,15 +219,15 @@ class CompteForm extends React.Component {
           </Select>}
           <Item style={styles.item} floatingLabel last>
             <Label>Téléphone : </Label>
-            <Input onChangeText={(text) => this.setState({telephone: text})} placeholder={this.state.telephone}/>
+            <Input keyboardType={'phone-pad'} onChangeText={(text) => this.setState({telephone: text})} placeholder={this.state.telephone}/>
           </Item>
           <Item style={styles.item} floatingLabel last>
             <Label>Mobile : </Label>
-            <Input onChangeText={(text) => this.setState({mobile: text})} placeholder={this.state.mobile}/>
+            <Input keyboardType={'phone-pad'} onChangeText={(text) => this.setState({mobile: text})} placeholder={this.state.mobile}/>
           </Item>
           <Item style={styles.item} floatingLabel last>
             <Label>Email : </Label>
-            <Input onChangeText={(text) => this.setState({email: text})} placeholder={this.state.mobile}/>
+            <Input keyboardType={'email-address'} onChangeText={(text) => this.setState({email: text})} placeholder={this.state.email}/>
           </Item>
           <Item style={styles.item} floatingLabel last>
             <Label>Adresse : </Label>
@@ -233,7 +235,7 @@ class CompteForm extends React.Component {
           </Item>
           <Item style={styles.item} floatingLabel last>
             <Label>CP : </Label>
-            <Input onChangeText={(text) => this.setState({cp: text})} placeholder={this.state.cp}/>
+            <Input keyboardType={'numeric'} onChangeText={(text) => this.setState({cp: text})} placeholder={this.state.cp}/>
           </Item>
           <Item style={styles.item} floatingLabel last>
             <Label>Ville : </Label>
@@ -254,32 +256,32 @@ class CompteForm extends React.Component {
           </Item>
           <Item style={styles.item} floatingLabel last>
             <Label>Cedex : </Label>
-            <Input onChangeText={(text) => this.setState({cedex: text})}/>
+            <Input keyboardType={'numeric'} onChangeText={(text) => this.setState({cedex: text})}/>
           </Item>
           <Item style={styles.item} floatingLabel last>
             <Label>Tel2 : </Label>
-            <Input onChangeText={(text) => this.setState({telephone2: text})} placeholder={this.state.adresse}/>
+            <Input keyboardType={'phone-pad'} onChangeText={(text) => this.setState({telephone2: text})} placeholder={this.state.telephone2}/>
           </Item>
           <Item style={styles.item} floatingLabel last>
             <Label>Fax : </Label>
-            <Input onChangeText={(text) => this.setState({fax: text})} placeholder={this.state.fax}/>
+            <Input keyboardType={'phone-pad'} onChangeText={(text) => this.setState({fax: text})} placeholder={this.state.fax}/>
           </Item>
           <Item style={styles.item} floatingLabel last>
             <Label>Capital : </Label>
-            <Input onChangeText={(text) => this.setState({capital: text})}/>
+            <Input keyboardType={'numeric'} onChangeText={(text) => this.setState({capital: text})}/>
           </Item>
           <Item style={styles.item} floatingLabel last>
             <Label>Siret : </Label>
-            <Input onChangeText={(text) => this.setState({siret: text})}/>
+            <Input keyboardType={'numeric'} onChangeText={(text) => this.setState({siret: text})}/>
           </Item>
           <Item style={styles.item} floatingLabel last>
             <Label>Commentaire : </Label>
-            <Textarea onChangeText={(text) => this.setState({commentaires: text})}/>
+            <Input onChangeText={(text) => this.setState({commentaires: text})}/>
           </Item>
           <Text style={styles.secondaryText}>Notes :</Text>
           <Item style={styles.item} floatingLabel last>
             <Label>Commentaires Note : </Label>
-            <Textarea onChangeText={(text) => this.setState({note: text})}/>
+            <Input onChangeText={(text) => this.setState({note: text})}/>
             <Button accent text="Ajouter Note"/>
           </Item>
           <Button onPress={() => this._validate()} accent
