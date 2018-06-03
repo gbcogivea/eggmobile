@@ -17,6 +17,7 @@ import { Select, Option } from "react-native-chooser";
 //TODO enlever la barre sur android et fermer la selection sur la perte du focus
 import Button from '../../../components/Button';
 import { fetchSources } from "../../../actions/render";
+import { contact as validator } from "../../../utils/validators";
 
 class ContactForm extends React.Component {
   state = {
@@ -100,23 +101,31 @@ class ContactForm extends React.Component {
       //"etat_nom": "string",
       //"photo": "string"
     };
-    if (this.props.route.params.profile) {
-      await dispatch(updateContact(contact, this.props.route.params.profile.cct_id));
-      const message = 'Mise à jour réussie';
-      this.props.navigator.showLocalAlert(message, {
+    try {
+      validator(contact);
+      if (this.props.route.params.profile) {
+        await dispatch(updateContact(contact, this.props.route.params.profile.cct_id));
+        const message = 'Mise à jour réussie';
+        this.props.navigator.showLocalAlert(message, {
+          text: {color: '#fff'},
+          container: {backgroundColor: '#4BB543'},
+        });
+      } else {
+        await dispatch(addContact(contact));
+        const message = 'Contact Créé';
+        this.props.navigator.showLocalAlert(message, {
+          text: {color: '#fff'},
+          container: {backgroundColor: '#4BB543'},
+        });
+      }
+      await dispatch(fetchContacts());
+      this.props.navigator.pop();
+    } catch (err) {
+      this.props.navigator.showLocalAlert(err.message, {
         text: {color: '#fff'},
-        container: {backgroundColor: '#4BB543'},
+        container: {backgroundColor: '#F44336'},
       });
-    } else {
-      await dispatch(addContact(contact));
-      const message = 'Contact Créé';
-      this.props.navigator.showLocalAlert(message, {
-        text: {color: '#fff'},
-        container: {backgroundColor: '#4BB543'},
-      });
-    }
-    await dispatch(fetchContacts());
-    this.props.navigator.pop();
+    };
   };
 
   render() {

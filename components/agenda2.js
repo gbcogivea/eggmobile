@@ -32,7 +32,6 @@ export default class AgendaScreen extends Component {
           renderItem={this.renderItem.bind(this)}
           renderEmptyDate={this.renderEmptyDate.bind(this)}
           rowHasChanged={this.rowHasChanged.bind(this)}
-          markingType={'multi-dot'}
         />
         <Modal style={{backgroundColor:'#FFF'}} isVisible={this.state.openModal}>
           <View style={{position:'absolute', top:-10, width:'100%'}}>
@@ -96,6 +95,16 @@ export default class AgendaScreen extends Component {
                   client: event.clt_nom,
                   contact: event.cct_pre + ' ' + event.cct_nom
                 });
+              } else {
+                this.state.items[strDate].push({
+                  meeting:event,
+                  name: event.even_nom,
+                  debut: event.debut_h,
+                  fin: ' - ' + event.fin_h,
+                  type: 'event',
+                  client: event.clt_nom,
+                  contact: event.cct_pre + ' ' + event.cct_nom
+                });
               }
             }
           });
@@ -116,6 +125,16 @@ export default class AgendaScreen extends Component {
               const strDate = this.timeToString(new Date(month + '/' + day + '/' + year + ' ' + heure).getTime());
               if (!this.state.items[strDate]) {
                 this.state.items[strDate] = [];
+                this.state.items[strDate].push({
+                  meeting:task,
+                  name: task.even_nom,
+                  debut: task.debut_h,
+                  fin: '',
+                  type: 'task',
+                  client: task.clt_nom,
+                  contact: task.cct_pre + ' ' + task.cct_nom
+                });
+              } else {
                 this.state.items[strDate].push({
                   meeting:task,
                   name: task.even_nom,

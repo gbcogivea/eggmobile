@@ -17,10 +17,11 @@ import Autocomplete from 'react-native-autocomplete-input';
 import { connect } from "react-redux";
 import { fetchEventStatus, fetchEventType, fetchSources } from "../../../actions/render";
 import { findAccountForForm } from "../../../actions/comptes";
-import { findContactForForm } from "../../../actions/contacts";
+import { addContact, fetchContacts, findContactForForm, updateContact } from "../../../actions/contacts";
 import Button from '../../../components/Button';
 import { addAffaire, fetchAffaires, updateAffaire } from "../../../actions/affaires";
 import { updateEvent } from "../../../actions/planning";
+import { evenement as validator } from '../../../utils/validators';
 
 var radio_props = [
   {label: 'param1', value: 0},
@@ -114,24 +115,31 @@ class Event extends React.Component {
       //"lieu": "string",
       //"lien": "string"
     };
-
-    if (this.props.route.params.event) {
-      await dispatch(updateEvent(event, this.props.route.params.event.even_id));
-      const message = 'Mise à jour réussie';
-      this.props.navigator.showLocalAlert(message, {
+    try {
+      validator(event);
+      if (this.props.route.params.event) {
+        await dispatch(updateEvent(event, this.props.route.params.event.even_id));
+        const message = 'Mise à jour réussie';
+        this.props.navigator.showLocalAlert(message, {
+          text: {color: '#fff'},
+          container: {backgroundColor: '#4BB543'},
+        });
+      } else {
+        await dispatch(addEvent(event));
+        const message = 'Evénement Créée';
+        this.props.navigator.showLocalAlert(message, {
+          text: {color: '#fff'},
+          container: {backgroundColor: '#4BB543'},
+        });
+      }
+      //TODO refresh data
+      this.props.navigator.pop();
+    } catch (err) {
+      this.props.navigator.showLocalAlert(err.message, {
         text: {color: '#fff'},
-        container: {backgroundColor: '#4BB543'},
+        container: {backgroundColor: '#F44336'},
       });
-    } else {
-      await dispatch(addEvent(event));
-      const message = 'Evénement Créée';
-      this.props.navigator.showLocalAlert(message, {
-        text: {color: '#fff'},
-        container: {backgroundColor: '#4BB543'},
-      });
-    }
-    //TODO refresh data
-    this.props.navigator.pop();
+    };
   };
 
   _findComptes = async (query) => {

@@ -17,6 +17,8 @@ import { Select, Option } from "react-native-chooser";
 import { connect } from "react-redux";
 import { addContact, fetchContacts, updateContact } from "../../../actions/contacts";
 import { addAffaire, fetchAffaires, updateAffaire } from "../../../actions/affaires";
+import {affaire as validator} from '../../../utils/validators';
+import { addAccount, fetchComptesPage, updateAccount } from "../../../actions/comptes";
 
 var radio_props = [
   {label: 'param1', value: 0},
@@ -123,24 +125,31 @@ class Example extends React.Component {
       //"cgv_id": 0,
       "clt_agt_ori": connectedUser.agt_id
     };
-
-    if (this.props.route.params.selectedAffaire) {
-      await dispatch(updateAffaire(opportunity, this.props.route.params.selectedAffaire.aff_id));
-      const message = 'Mise à jour réussie';
-      this.props.navigator.showLocalAlert(message, {
+    try {
+      validator(opportunity);
+      if (this.props.route.params.selectedAffaire) {
+        await dispatch(updateAffaire(opportunity, this.props.route.params.selectedAffaire.aff_id));
+        const message = 'Mise à jour réussie';
+        this.props.navigator.showLocalAlert(message, {
+          text: {color: '#fff'},
+          container: {backgroundColor: '#4BB543'},
+        });
+      } else {
+        await dispatch(addAffaire(opportunity));
+        const message = 'Affaire Créée';
+        this.props.navigator.showLocalAlert(message, {
+          text: {color: '#fff'},
+          container: {backgroundColor: '#4BB543'},
+        });
+      }
+      await dispatch(fetchAffaires());
+      this.props.navigator.pop();
+    } catch (err) {
+      this.props.navigator.showLocalAlert(err.message, {
         text: {color: '#fff'},
-        container: {backgroundColor: '#4BB543'},
+        container: {backgroundColor: '#F44336'},
       });
-    } else {
-      await dispatch(addAffaire(opportunity));
-      const message = 'Affaire Créée';
-      this.props.navigator.showLocalAlert(message, {
-        text: {color: '#fff'},
-        container: {backgroundColor: '#4BB543'},
-      });
-    }
-    await dispatch(fetchAffaires());
-    this.props.navigator.pop();
+    };
   };
 
   render() {

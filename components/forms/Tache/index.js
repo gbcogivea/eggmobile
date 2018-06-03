@@ -14,10 +14,11 @@ import { connect } from "react-redux";
 import { fetchTaskPriority, fetchTaskStatus } from "../../../actions/render";
 import Autocomplete from 'react-native-autocomplete-input';
 import { findAccountForForm } from "../../../actions/comptes";
-import { findContactForForm } from "../../../actions/contacts";
+import { addContact, fetchContacts, findContactForForm, updateContact } from "../../../actions/contacts";
 import { Select, Option } from "react-native-chooser";
 import Button from '../../../components/Button';
 import { addTask, updateEvent, updateTask } from "../../../actions/planning";
+import { tache as validator } from '../../../utils/validators';
 
 class TaskForm extends React.Component {
 
@@ -97,24 +98,31 @@ class TaskForm extends React.Component {
       "comm": this.props.route.params.task.comm,
       "comm_htm": this.props.route.params.task.comm
     };
-
-    if (this.props.route.params.task) {
-      await dispatch(updateTask(task, this.props.route.params.task.even_id));
-      const message = 'Mise à jour réussie';
-      this.props.navigator.showLocalAlert(message, {
+    try {
+      validator(task);
+      if (this.props.route.params.task) {
+        await dispatch(updateTask(task, this.props.route.params.task.even_id));
+        const message = 'Mise à jour réussie';
+        this.props.navigator.showLocalAlert(message, {
+          text: {color: '#fff'},
+          container: {backgroundColor: '#4BB543'},
+        });
+      } else {
+        await dispatch(addTask(task));
+        const message = 'Tâche Créée';
+        this.props.navigator.showLocalAlert(message, {
+          text: {color: '#fff'},
+          container: {backgroundColor: '#4BB543'},
+        });
+      }
+      //TODO refresh data
+      this.props.navigator.pop();
+    } catch (err) {
+      this.props.navigator.showLocalAlert(err.message, {
         text: {color: '#fff'},
-        container: {backgroundColor: '#4BB543'},
+        container: {backgroundColor: '#F44336'},
       });
-    } else {
-      await dispatch(addTask(task));
-      const message = 'Tâche Créée';
-      this.props.navigator.showLocalAlert(message, {
-        text: {color: '#fff'},
-        container: {backgroundColor: '#4BB543'},
-      });
-    }
-    //TODO refresh data
-    this.props.navigator.pop();
+    };
   };
 
   _findComptes = async (query) => {

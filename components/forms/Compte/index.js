@@ -16,6 +16,8 @@ import { withNavigation } from '@expo/ex-navigation';
 import Button from '../../../components/Button';
 import { Select, Option } from "react-native-chooser";
 import { fetchCountries, fetchLegalStatus, fetchStates, fetchStatus } from "../../../actions/render";
+import { compte as validator } from '../../../utils/validators';
+import { updateEvent } from "../../../actions/planning";
 
 @withNavigation
 class CompteForm extends React.Component {
@@ -27,22 +29,22 @@ class CompteForm extends React.Component {
     statusNom: this.props.route.params.selectedCompte ? this.props.route.params.selectedCompte.statut_nom : 'Status',
     flag: 0,
     civilite: 0,
-    civiliteLabel:'Civilité',
+    civiliteLabel: 'Civilité',
     legalStatusLabel: 'Forme',
-    legalStatus:0,
+    legalStatus: 0,
     prenom: '',
-    telephone: this.props.route.params.selectedCompte ? this.props.route.params.selectedCompte.clt_tel :'',
-    mobile: this.props.route.params.selectedCompte ? this.props.route.params.selectedCompte.clt_port :'',
-    email: this.props.route.params.selectedCompte ? this.props.route.params.selectedCompte.clt_mail :'',
-    adresse: this.props.route.params.selectedCompte ? this.props.route.params.selectedCompte.clt_adr1 :'',
-    cp: this.props.route.params.selectedCompte ? this.props.route.params.selectedCompte.clt_cp :'',
-    ville: this.props.route.params.selectedCompte ? this.props.route.params.selectedCompte.clt_ville :'',
+    telephone: this.props.route.params.selectedCompte ? this.props.route.params.selectedCompte.clt_tel : '',
+    mobile: this.props.route.params.selectedCompte ? this.props.route.params.selectedCompte.clt_port : '',
+    email: this.props.route.params.selectedCompte ? this.props.route.params.selectedCompte.clt_mail : '',
+    adresse: this.props.route.params.selectedCompte ? this.props.route.params.selectedCompte.clt_adr1 : '',
+    cp: this.props.route.params.selectedCompte ? this.props.route.params.selectedCompte.clt_cp : '',
+    ville: this.props.route.params.selectedCompte ? this.props.route.params.selectedCompte.clt_ville : '',
     pays: this.props.route.params.selectedCompte ? parseInt(this.props.route.params.selectedCompte.pays_id) : 0,
-    paysNom: this.props.route.params.selectedCompte ? this.props.route.params.selectedCompte.pays_nom :'',
-    siteWeb: this.props.route.params.selectedCompte ? this.props.route.params.selectedCompte.clt_site :'',
+    paysNom: this.props.route.params.selectedCompte ? this.props.route.params.selectedCompte.pays_nom : '',
+    siteWeb: this.props.route.params.selectedCompte ? this.props.route.params.selectedCompte.clt_site : '',
     //cedex: '???',
-    telephone2: this.props.route.params.selectedCompte ? this.props.route.params.selectedCompte.clt_tel2 :'',
-    fax: this.props.route.params.selectedCompte ? this.props.route.params.selectedCompte.clt_fax :'',
+    telephone2: this.props.route.params.selectedCompte ? this.props.route.params.selectedCompte.clt_tel2 : '',
+    fax: this.props.route.params.selectedCompte ? this.props.route.params.selectedCompte.clt_fax : '',
     //TODO manque adresse
     capital: 0,
     siret: '',
@@ -128,23 +130,31 @@ class CompteForm extends React.Component {
       //"cgv_id": 0,
       "clt_agt_ori": connectedUser.agt_id
     };
-    if(this.props.route.params.selectedCompte) {
-      await dispatch(updateAccount(account, this.props.route.params.selectedCompte.clt_id));
-      const message = 'Mise à jour réussie';
-      this.props.navigator.showLocalAlert(message, {
-        text: { color: '#fff' },
-        container: { backgroundColor: '#4BB543' },
+    try {
+      validator(account);
+      if (this.props.route.params.selectedCompte) {
+        await dispatch(updateAccount(account, this.props.route.params.selectedCompte.clt_id));
+        const message = 'Mise à jour réussie';
+        this.props.navigator.showLocalAlert(message, {
+          text: {color: '#fff'},
+          container: {backgroundColor: '#4BB543'},
+        });
+      } else {
+        await dispatch(addAccount(account));
+        const message = 'Compte Créé';
+        this.props.navigator.showLocalAlert(message, {
+          text: {color: '#fff'},
+          container: {backgroundColor: '#4BB543'},
+        });
+      }
+      await dispatch(fetchComptesPage(0, 10));
+      this.props.navigator.pop();
+    } catch (err) {
+      this.props.navigator.showLocalAlert(err.message, {
+        text: {color: '#fff'},
+        container: {backgroundColor: '#F44336'},
       });
-    } else {
-      await dispatch(addAccount(account));
-      const message = 'Compte Créé';
-      this.props.navigator.showLocalAlert(message, {
-        text: { color: '#fff' },
-        container: { backgroundColor: '#4BB543' },
-      });
-    }
-    await dispatch(fetchComptesPage(0, 10));
-    this.props.navigator.pop();
+    };
   };
 
   render() {
@@ -171,35 +181,36 @@ class CompteForm extends React.Component {
             <Input onChangeText={(text) => this.setState({nom: text})} placeholder={this.state.nom}/>
           </Item>}
           <Select
-            defaultText={this.state.etatNom} optionListStyle = {styles.options}
+            defaultText={this.state.etatNom} optionListStyle={styles.options}
             style={styles.select}
-            onSelect={(itemValue, itemLabel) => this.setState({etat: itemValue, etatNom:itemLabel})}>
+            onSelect={(itemValue, itemLabel) => this.setState({etat: itemValue, etatNom: itemLabel})}>
             {this.props.states.map((state, index) => {
               return <Option key={index} value={state.id}>{state.text}</Option>
             })}
           </Select>
           <Select
-            defaultText={this.state.statusNom} optionListStyle = {styles.options}
+            defaultText={this.state.statusNom} optionListStyle={styles.options}
             style={styles.select}
             onSelect={(itemValue, itemLabel) => this.setState({
               status: parseInt(itemValue.split('!')[0]),
-              flag:parseInt(itemValue.split('!')[1]),
-              statusNom:itemLabel})}>
+              flag: parseInt(itemValue.split('!')[1]),
+              statusNom: itemLabel
+            })}>
             {this.props.status.map((state, index) => {
               return <Option key={index} value={state.id + '!' + state.type}>{state.nom}</Option>
             })}
           </Select>
           {this.state.flag === 1 && <Select
-            defaultText={this.state.civiliteLabel} optionListStyle = {styles.options}
+            defaultText={this.state.civiliteLabel} optionListStyle={styles.options}
             style={styles.select}
-            onSelect={(itemValue, itemLabel) => this.setState({civilite: itemValue, civiliteLabel:itemLabel})}>
+            onSelect={(itemValue, itemLabel) => this.setState({civilite: itemValue, civiliteLabel: itemLabel})}>
             <Option value={0}>Monsieur</Option>
             <Option value={1}>Madame</Option>
           </Select>}
           {this.state.flag === 0 && <Select
-            defaultText={this.state.legalStatusLabel} optionListStyle = {styles.options}
+            defaultText={this.state.legalStatusLabel} optionListStyle={styles.options}
             style={styles.select}
-            onSelect={(itemValue, itemLabel) => this.setState({legalStatus: itemValue, legalStatusLabel:itemLabel})}>
+            onSelect={(itemValue, itemLabel) => this.setState({legalStatus: itemValue, legalStatusLabel: itemLabel})}>
             {this.props.legalStatus.map((state, index) => {
               return <Option key={index} value={state.id}>{state.text}</Option>
             })}
@@ -229,9 +240,9 @@ class CompteForm extends React.Component {
             <Input onChangeText={(text) => this.setState({ville: text})} placeholder={this.state.ville}/>
           </Item>
           <Select
-            defaultText={this.state.paysNom} optionListStyle = {styles.options}
+            defaultText={this.state.paysNom} optionListStyle={styles.options}
             style={styles.select}
-            onSelect={(itemValue, itemLabel) => this.setState({pays: itemValue, paysNom:itemLabel})}>
+            onSelect={(itemValue, itemLabel) => this.setState({pays: itemValue, paysNom: itemLabel})}>
             {this.props.countries.map((state, index) => {
               return <Option key={index} value={state.id}>{state.text}</Option>
             })}
@@ -243,7 +254,7 @@ class CompteForm extends React.Component {
           </Item>
           <Item style={styles.item} floatingLabel last>
             <Label>Cedex : </Label>
-            <Input onChangeText={(text) => this.setState({cedex: text})} />
+            <Input onChangeText={(text) => this.setState({cedex: text})}/>
           </Item>
           <Item style={styles.item} floatingLabel last>
             <Label>Tel2 : </Label>
@@ -255,15 +266,15 @@ class CompteForm extends React.Component {
           </Item>
           <Item style={styles.item} floatingLabel last>
             <Label>Capital : </Label>
-            <Input onChangeText={(text) => this.setState({capital: text})} />
+            <Input onChangeText={(text) => this.setState({capital: text})}/>
           </Item>
           <Item style={styles.item} floatingLabel last>
             <Label>Siret : </Label>
-            <Input onChangeText={(text) => this.setState({siret: text})} />
+            <Input onChangeText={(text) => this.setState({siret: text})}/>
           </Item>
           <Item style={styles.item} floatingLabel last>
             <Label>Commentaire : </Label>
-            <Textarea onChangeText={(text) => this.setState({commentaires: text})} />
+            <Textarea onChangeText={(text) => this.setState({commentaires: text})}/>
           </Item>
           <Text style={styles.secondaryText}>Notes :</Text>
           <Item style={styles.item} floatingLabel last>
@@ -271,7 +282,8 @@ class CompteForm extends React.Component {
             <Textarea onChangeText={(text) => this.setState({note: text})}/>
             <Button accent text="Ajouter Note"/>
           </Item>
-          <Button onPress={() => this._validate()} accent title={this.props.route.params.selectedCompte ? 'Mettre à jour' : 'Valider'}
+          <Button onPress={() => this._validate()} accent
+                  title={this.props.route.params.selectedCompte ? 'Mettre à jour' : 'Valider'}
                   backgroundColor={'#2196F3'} color={'#FFF'}/>
         </ScrollView>
       </View>
@@ -306,13 +318,13 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   options: {
-    width:'100%',
-    height:'100%'
+    width: '100%',
+    height: '100%'
   },
   select: {
-    width:'95%',
-    margin:10,
-    borderColor:'grey'
+    width: '95%',
+    margin: 10,
+    borderColor: 'grey'
   },
 });
 

@@ -6,14 +6,13 @@
  */
 
 import React from 'react';
-import { View, StyleSheet, Platform, Text } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 import { Constants, Location, Permissions, MapView } from 'expo';
 import Header from '../../components/Header';
-import { Toolbar, COLOR, ActionButton } from 'react-native-material-ui';
+import { ActionButton } from 'react-native-material-ui';
 import { connect } from 'react-redux';
 import { findAccountArroundMe } from "../../actions/comptes";
-import { Marker } from 'react-native-maps';
-import { Router } from "../../main";
+const Marker = MapView.Marker;
 
 class GeoScreen extends React.Component {
   state = {
@@ -46,10 +45,6 @@ class GeoScreen extends React.Component {
 
   _fetchData = async () => {
     const {dispatch} = this.props;
-    /*await dispatch(findAccountArroundMe(this.state.location.coords.latitude,
-      this.state.location.coords.longitude,
-      50,
-      'circle'));*/
     await dispatch(findAccountArroundMe(46.323716,
       -0.464777,
       50,
