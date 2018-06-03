@@ -12,10 +12,14 @@ import request from 'axios';
 import { Toast } from 'native-base';
 import {DEFAULT_HOST_API} from "../config";
 import moment from 'moment';
+import Geocoder from 'react-native-geocoding';
 
 let host = DEFAULT_HOST_API;
 
+const googleMapApiKey = 'AIzaSyCPhB93EW5_Q9iAjBWMYi0X0hhvIqTGyN4';
 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+
+Geocoder.init(googleMapApiKey);
 
 export const checkValue = (value) => {
     if (value) {
@@ -159,8 +163,15 @@ export const call = (phone) => {
     Linking.openURL('tel:' + phone);
 };
 
-export const openMap = (address) => {
-    Linking.openURL('sms:' + address);
+export const openMap = (address, cp, city) => {
+  Geocoder.from(`${address}, ${city} ${cp}`)
+    .then(json => {
+      const location = json.results[0].geometry.location;
+      const lat = location.lat;
+      const long = location.lng;
+      Linking.openURL(`http://maps.apple.com/?ll=${lat},${long}`);
+    })
+    .catch(error => console.warn(error));
 };
 
 export const openVisio = (phone) => {

@@ -112,9 +112,19 @@ class ComptesScreen extends React.Component {
         if (!data.isSelect) {
             s = {display: 'none'};
         }
+        let mail = data.clt_mail;
+        let phone = '';
+        if(data.clt_port !== '') {
+            phone = data.clt_port;
+        } else if(data.clt_tel !== '') {
+          phone = data.clt_tel;
+        } else if(data.clt_tel2 !== '') {
+          phone = data.clt_tel2;
+        }
+
         return (
             <View style={s}>
-                <SubMenuContact phone={'+33628492664'} email={'jul.79000@gmail.com'}
+                <SubMenuContact phone={phone.split('.').join('').trim()} email={mail}
                                 toProfile={() => this._navigateToCompte(data)}/>
             </View>);
     };

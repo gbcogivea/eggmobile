@@ -8,7 +8,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { MaterialIcons, FontAwesome, Ionicons } from '@expo/vector-icons';
-import { sendSms, call, checkValue, sendEmail } from '../../utils/utils';
+import { sendSms, call, checkValue, sendEmail, openMap } from '../../utils/utils';
 import { Toolbar, Divider } from 'react-native-material-ui';
 import { connect } from 'react-redux';
 import { findContact } from '../../actions/contacts';
@@ -101,7 +101,9 @@ class Profile extends React.Component {
                     size={32} color="#239D60"/>
         </View>}
         {checkValue(profile.cct_mail) && <Divider/>}
-        <Text style={styles.primaryText}>Adresse</Text>
+        {checkValue(profile.cct_adr1) && checkValue(profile.cct_ville) &&
+        <Text style={styles.primaryText}>Adresse</Text>}
+        {checkValue(profile.cct_adr1) && checkValue(profile.cct_ville) &&
         <View style={styles.row}>
           <View style={styles.secoundaryView}>
             <Text
@@ -109,10 +111,10 @@ class Profile extends React.Component {
             <Text
               style={styles.address}>{profile.cct_cp + ' ' + profile.cct_ville}</Text>
           </View>
-          <FontAwesome style={styles.item} onPress={() => this._handleCall(phone)} name="map-o"
+          <FontAwesome style={styles.item} onPress={() => openMap(profile.cct_adr1, profile.cct_cp, profile.cct_ville)} name="map-o"
                        size={iconSize} color="#239D60"/>
-        </View>
-        <Divider/>
+        </View>}
+        {checkValue(profile.cct_adr1) && checkValue(profile.cct_ville) && <Divider/>}
       </View>
     );
   }

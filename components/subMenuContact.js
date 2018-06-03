@@ -24,7 +24,7 @@ export default class SubMenuContact extends Component {
     };
 
     _handleCall = () => {
-        const phone = this.props.phone.replace('.', '');
+        const phone = this.props.phone;
         if (phone === '') {
             alert('Ce contact n\'a pas de numéro de téléphone');
         } else {
@@ -33,7 +33,7 @@ export default class SubMenuContact extends Component {
     };
 
     _handleMessage = () => {
-        const phone = this.props.phone.replace('.', '');
+        const phone = this.props.phone;
         if (phone === '') {
             alert('Ce contact n\'a pas de numéro de téléphone');
         } else {

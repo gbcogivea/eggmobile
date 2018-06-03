@@ -37,6 +37,7 @@
     "react-native-collapsible": "^0.9.0",
     "react-native-datepicker": "^1.6.0",
     "react-native-form-validator": "^0.2.0",
+    "react-native-geocoding": "^0.3.0",
     "react-native-label-select": "^1.1.0",
     "react-native-material-ui": "^1.12.0",
     "react-native-md-textinput": "^2.0.4",
