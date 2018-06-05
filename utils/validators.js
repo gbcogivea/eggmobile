@@ -38,11 +38,13 @@ const isEmail = (value) => {
 };
 
 const isDate = (value) => {
-  if (validator.toDate(value)) {
+  // TODO
+  return true;
+  /*if (validator.toDate(value)) {
     return true;
   } else {
     return false;
-  }
+  }*/
 };
 
 const validate = (value, name, kind, required) => {
@@ -149,13 +151,12 @@ export const tache = (tache) => {
   let message = defaultMessage;
 
   try {
-    message += validate(tache.even_id, 'l\'événement', 'number', true);
     message += validate(tache.agt_id, 'l\'agent', 'number', true);
     message += validate(tache.priorite, 'la priorité', 'number', true);
     message += validate(tache.clt_id, 'le client', 'number', true);
     message += validate(tache.cct_id, 'le contact', 'number', true);
     message += validate(tache.debut, 'la date de début', 'date', true);
-    message += validate(tache.debut_h, 'l\'heure du début', 'string', true);
+    message += validate(tache.debut_h, 'l\'heure du début', 'date', true);
     message += validate(tache.comm, 'le commentaire', 'string', true);
     message += validate(tache.comm_htm, 'le commentaire', 'string', true);
 

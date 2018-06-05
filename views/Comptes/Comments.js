@@ -12,6 +12,7 @@ import {connect} from 'react-redux';
 import {addComment, fetchCommentsOfCompte} from '../../actions/comptes';
 import Jumbotron from '../../components/jumbotron/jumbotronCompte';
 import * as Constantes from '../../constantes';
+import { formatDate } from "../../utils/utils";
 
 class CommentsScreen extends React.Component {
     constructor(props, context) {
@@ -58,12 +59,12 @@ class CommentsScreen extends React.Component {
                     onLeftElementPress={() => {
                         this.props.navigator.pop();
                     }}
-                    centerElement={'Commentaires'}
+                    centerElement={'Notes'}
                 />
                 <Jumbotron primaryText={selectedCompte.clt_nom}
                            secoundaryText={selectedCompte.etatclt_nom}
                            thirdText={`${selectedCompte.clt_adr1} \n ${selectedCompte.clt_cp} ${selectedCompte.clt_ville}`}/>
-               <Text style={styles.title2}>Ajouter un commentaire</Text>
+               <Text style={styles.title2}>Ajouter une note</Text>
                 <View style={styles.inputContainer}>
                     <TextInput style={styles.input}
                                multiline={true}
@@ -75,16 +76,15 @@ class CommentsScreen extends React.Component {
 
                 </View>
                 <Button onPress={this._addComment} raised primary text="Ajouter"/>
-                <Text style={styles.title}>Historiques Commentaires</Text>
+                <Text style={styles.title}>Historiques Notes</Text>
                 <ScrollView>
 
                     {this.props.comments.map((comment, index) => {
                         return (
                             <View key={index}>
                                 <Divider/>
-                                <Text style={styles.date}>{comment.debut}</Text>
-                                <Text style={styles.name}>{comment.agt_pre + ' ' + comment.agt_nom}</Text>
-                                <Text style={styles.event}>{comment.even_nom}</Text>
+                                <Text style={styles.date}>{formatDate(new Date(comment.debut))} {comment.agt_pre + ' ' + comment.agt_nom}</Text>
+                                <Text style={styles.event}>{comment.type_nom}</Text>
                                 <Text style={styles.comment}>{comment.comm}</Text>
                                 <Text/>
                             </View>)

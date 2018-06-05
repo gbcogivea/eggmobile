@@ -68,11 +68,11 @@ class TaskForm extends React.Component {
 
   _validate = async () => {
     const {dispatch, connectedUser} = this.props;
-    const contact = this.state.contact;
-    const compte = this.state.compte;
+    const {contact, compte} = this.state;
+    const {params} = this.props.route;
 
     const task = {
-      "even_id": this.props.route.params.task ? this.props.route.params.task.even_id : null,
+      "even_id": params.task ? params.task.even_id : null,
       "even_nom": this.state.nom,
       //"nmr": "string",
       "agt_id": connectedUser.agt_id,
@@ -86,7 +86,7 @@ class TaskForm extends React.Component {
       "clt_nom": compte.clt_nom,
       "clt_pre": compte.clt_pre,
       "clt_nmr": compte.clt_nmr,
-      "clt_cp": comtpe.clt_cp,
+      "clt_cp": compte.clt_cp,
       "clt_ville": compte.clt_ville,
       "cct_id": contact.cct_id,
       "cct_nom": contact.cct_nom,
@@ -95,8 +95,8 @@ class TaskForm extends React.Component {
       "cct_ville": contact.cct_ville,
       "debut": this.state.dateEcheance,
       "debut_h": this.state.heureEcheance,
-      "comm": this.props.route.params.task.comm,
-      "comm_htm": this.props.route.params.task.comm
+      "comm": this.state.commentaires,
+      "comm_htm": this.state.commentaires
     };
     try {
       validator(task);
@@ -270,7 +270,7 @@ class TaskForm extends React.Component {
           </Select>
           <Item style={styles.item} floatingLabel last>
             <Label>Commentaires :</Label>
-            <Textarea onChangeText={(text) => this.setState({commentaires: text})}/>
+            <Input onChangeText={(text) => this.setState({commentaires: text})}/>
           </Item>
           <Button onPress={() => this._validate()} accent title="Valider"
                   backgroundColor={'#2196F3'} color={'#FFF'}/>
@@ -327,7 +327,8 @@ const mapStateToProps = (state) => {
     taskStatus: renderReducer.taskStatus,
     taskPriority: renderReducer.taskPriority,
     comptes: comptes.comptesForm,
-    contacts: contacts.contactsForm
+    contacts: contacts.contactsForm,
+    connectedUser: renderReducer.connectedUser
   }
 };
 

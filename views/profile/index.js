@@ -13,6 +13,7 @@ import { Toolbar, Divider } from 'react-native-material-ui';
 import { connect } from 'react-redux';
 import { findContact } from '../../actions/contacts';
 import { Router } from "../../main";
+import Jumbotron from '../../components/jumbotron/jumbotronContact';
 
 class Profile extends React.Component {
 
@@ -48,17 +49,8 @@ class Profile extends React.Component {
           }}
           centerElement={'Profil'}
         />
-        <Divider/>
-        <Text style={styles.primaryText}>Personne</Text>
-        <View style={styles.row}>
-          <View style={styles.secoundaryView}>
-            <Text
-              style={styles.address}>{profile.cct_nom + ' ' + profile.cct_pre}</Text>
-            <Text
-              style={styles.address2}>{profile.fonction_nom}</Text>
-          </View>
-        </View>
-        <Divider/>
+        <Jumbotron primaryText={profile.cct_nom + ' ' + profile.cct_pre}
+                   secoundaryText={profile.fonction_nom}/>
         {checkValue(profile.cct_tel) && <Text style={styles.primaryText}>Téléphones</Text>}
         {checkValue(profile.cct_tel) && <View style={styles.row}>
           <Text style={styles.address}>{profile.cct_tel}</Text>

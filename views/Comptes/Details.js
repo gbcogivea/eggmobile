@@ -59,8 +59,8 @@ class DetailCompteScreen extends React.Component {
                     onPress={() => this._goToScreen('suivi')}
                     />
                 <ListItem
-                    title={'Commentaires'}
-                    description="Commentaires du compte"
+                    title={'Notes'}
+                    description="Notes du compte"
                     onPress={() => this._goToScreen('commentsDuCompte')}
                     />
                 <ListItem

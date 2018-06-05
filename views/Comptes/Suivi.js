@@ -45,8 +45,8 @@ class SuiviScreen extends React.Component {
                     {this.props.suivi.map((s, index) => {
                         return (<View key={index}>
                             <Divider/>
-                            <Text style={styles.primaryText}>{formatDate(new Date(s.tpl.title))}</Text>
-                            <Text style={styles.secondaryText}>{s.tpl.content}</Text>
+                            <Text style={styles.primaryText}>{formatDate(new Date(s.timestamp_date * 1000))}</Text>
+                            <Text style={styles.secondaryText}>{s.titre}</Text>
                         </View>)
                     })}
                 </ScrollView>

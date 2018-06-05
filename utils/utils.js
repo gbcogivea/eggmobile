@@ -226,6 +226,7 @@ export const agregateEventsAndTasks = async (events, tasks, day) => {
 };
 
 export const formatDate = (date) => {
+    // TODO gérer les deux formats reçus
     const monthNames = [
         "Janvier", "Février", "Mars",
         "Avril", "Mai", "Juin", "Juillet",
@@ -233,7 +234,7 @@ export const formatDate = (date) => {
         "Novembre", "Décembre"
     ];
 
-    const day = date.getDate();
+    const day = date.getDay();
     const monthIndex = date.getMonth();
     const year = date.getFullYear();
 

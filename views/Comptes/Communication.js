@@ -12,11 +12,11 @@ import Jumbotron from '../../components/jumbotron/jumbotronCompte';
 import {MaterialIcons, FontAwesome, Ionicons} from '@expo/vector-icons';
 import {connect} from 'react-redux';
 import MenuButtonCompte from '../../components/MenuButtonComptes';
-import {sendSms, call, checkValue, openVisio, sendEmail} from '../../utils/utils';
+import { sendSms, call, checkValue, openVisio, sendEmail, openMap } from '../../utils/utils';
 
 class CommunicationScreen extends React.Component {
-    _handleMail = () => {
-        sendEmail(this.props.selectedCompte.email);
+    _handleMail = (mail) => {
+        sendEmail(mail);
     };
 
     _handleCall = (phone) => {
@@ -115,7 +115,7 @@ class CommunicationScreen extends React.Component {
                             <Text
                                 style={styles.address2}>{selectedCompte.clt_cp + ' ' + selectedCompte.clt_ville}</Text>
                         </View>
-                        <FontAwesome style={styles.item} onPress={() => this._handleCall(phone)} name="map-o"
+                        <FontAwesome style={styles.item} onPress={() => openMap(selectedCompte.clt_adr1, selectedCompte.clt_cp, selectedCompte.clt_ville)} name="map-o"
                                      size={iconSize} color="grey"/>
                     </View>}
                 </View>

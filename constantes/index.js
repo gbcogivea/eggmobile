@@ -78,6 +78,6 @@ export const FETCH_SOURCES = 'FETCH_SOURCES';
 export const FETCH_TASK_PRIORITY = 'FETCH_TASK_PRIORITY';
 export const FETCH_TASK_STATUS = 'FETCH_TASK_STATUS';
 
-export const add_comment_message = 'Ajoutez un commentaire';
+export const add_comment_message = 'Ajoutez une note';
 
 
