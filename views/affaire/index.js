@@ -114,7 +114,7 @@ class AffairesScreen extends React.Component {
     }
     return (
       <View style={s}>
-        <SubMenuContact phone={'+33628492664'} email={'jul.79000@gmail.com'}
+        <SubMenuContact phone={''} email={''}
                         toProfile={() => this._navigateToAffaire(data.aff_id)}/>
       </View>);
   };
