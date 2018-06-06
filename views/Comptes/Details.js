@@ -78,7 +78,7 @@ class DetailCompteScreen extends React.Component {
                     description="Compléments d'information du compte"
                     onPress={() => this._goToScreen('infoComplementaires')}
                     />
-                <MenuButtonCompte/>
+                <MenuButtonCompte access={this.props.access}/>
             </View>
         );
     }

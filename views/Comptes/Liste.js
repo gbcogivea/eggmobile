@@ -155,6 +155,7 @@ class ComptesScreen extends React.Component {
     };
 
     render() {
+        console.log(this.props.access)
         return (
             <View style={{height: '100%'}}>
                 <Header search={true}

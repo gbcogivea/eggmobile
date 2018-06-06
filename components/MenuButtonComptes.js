@@ -55,17 +55,16 @@ class MenuButtonComptes extends React.Component {
   };
 
   render() {
-    return (
-      <View>
-        {this.state.actions.length > 0 &&
-        <ActionButton
-          actions={this.state.actions}
-          onPress={this._navigate}
-          transition="speedDial"
-          icon="add"
-        />}
-      </View>
-    );
+    if(this.state.actions.length > 0) {
+      return (<ActionButton
+        actions={this.state.actions}
+        onPress={this._navigate}
+        transition="speedDial"
+        icon="add"
+      />)
+    } else {
+      return <View/>
+    }
   }
 }
 

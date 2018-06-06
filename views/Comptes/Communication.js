@@ -119,7 +119,7 @@ class CommunicationScreen extends React.Component {
                                      size={iconSize} color="grey"/>
                     </View>}
                 </View>
-                    <MenuButtonCompte/>
+                    <MenuButtonCompte access={this.props.access}/>
             </View>
         );
     }
@@ -176,9 +176,10 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-    const {comptes} = state;
+    const {comptes, renderReducer} = state;
     return {
-        selectedCompte: comptes.selectedCompte
+        selectedCompte: comptes.selectedCompte,
+      access: renderReducer.access
     }
 };
 
