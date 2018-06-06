@@ -23,10 +23,19 @@ import * as types from "../../constantes";
 
 class AgendaView extends React.Component {
 
-  state = {active: 'today'};
+  state = {
+    active: 'today',
+    actions: []
+  };
 
   async componentWillMount() {
-    const {dispatch} = this.props;
+    const {dispatch, access} = this.props;
+    if(access.even > 2) {
+      this.state.actions.push({icon: 'event', label: 'Evenement'});
+    }
+    if(access.tache > 2) {
+      this.state.actions.push({icon: 'bookmark', label: 'Tache'});
+    }
     await dispatch(fetchStates());
     await dispatch(fetchStatus());
     await dispatch(fetchCountries());
@@ -60,13 +69,12 @@ class AgendaView extends React.Component {
                 navigation={this.props.navigation}/>
         {/*N'afficher que les évenements du jour*/}
         <Agenda events={this.props.events} loadEvents={this._loadEvents}/>
+        {this.state.actions.length > 0 &&
         <ActionButton
-          actions={[
-            {icon: 'bookmark', label: 'Tache'},
-            {icon: 'event', label: 'Evenement'}]}
+          actions={this.state.actions}
           onPress={this._navigate}
           transition="speedDial"
-        />
+        />}
       </View>
     );
   }
@@ -90,9 +98,10 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-  const {planning} = state;
+  const {planning, renderReducer} = state;
   return {
-    events: planning.events
+    events: planning.events,
+    access: renderReducer.access
   }
 };
 

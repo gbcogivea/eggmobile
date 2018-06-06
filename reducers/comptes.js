@@ -53,6 +53,7 @@ const comptes = (state = initialState, action) => {
         notes: action.data
       });
     case types.ADD_COMMENT_SUCCESS:
+      console.log(action.data)
       return Object.assign({}, state, {
         notes: [action.data, ...state.notes]
       });

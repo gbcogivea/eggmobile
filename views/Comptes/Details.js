@@ -26,20 +26,30 @@ class DetailCompteScreen extends React.Component {
     };
 
     render() {
-        const { selectedCompte, route } = this.props;
+        const { selectedCompte, route, access } = this.props;
         const compte = route.params.compte;
 
         return (
             <View style={styles.container}>
-                <Toolbar
-                    leftElement="arrow-back"
-                    rightElement="mode-edit"
-                    onRightElementPress={() => this.props.navigator.push(Router.getRoute('createCompte', {selectedCompte}))}
-                    onLeftElementPress={() => {
-                        this.props.navigator.pop();
-                    }}
-                    centerElement={'Compte'}
-                    />
+
+              {access.compte > 1 &&
+              <Toolbar
+                leftElement="arrow-back"
+                rightElement="mode-edit"
+                onRightElementPress={() => this.props.navigator.push(Router.getRoute('createCompte', {selectedCompte}))}
+                onLeftElementPress={() => {
+                  this.props.navigator.pop();
+                }}
+                centerElement={'Compte'}
+              />}
+              {access.compte < 2 &&
+              <Toolbar
+                leftElement="arrow-back"
+                onLeftElementPress={() => {
+                  this.props.navigator.pop();
+                }}
+                centerElement={'Compte'}
+              />}
                 <Jumbotron primaryText={selectedCompte.clt_nom}
                            secoundaryText={selectedCompte.etatclt_nom}
                            thirdText={`${selectedCompte.clt_adr1} \n ${selectedCompte.clt_cp} ${selectedCompte.clt_ville}`}/>
@@ -89,9 +99,10 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-    const { comptes } = state;
+    const { comptes, renderReducer } = state;
     return {
-        selectedCompte: comptes.selectedCompte
+        selectedCompte: comptes.selectedCompte,
+      access: renderReducer.access
     }
 };
 

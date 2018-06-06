@@ -50,11 +50,10 @@ export const fetchCommentsOfCompte = (compte) => {
     };
 };
 
-export const addComment = ( compte, comment) => {
-    return {
-        type: types.ADD_COMMENT_SUCCESS,
-        data: {value:comment}
-    }
+export const addComment = ( compte_id, comment) => {
+  return (dispatch) => {
+    return customDispatcher(dispatch, 'POST', `/account/${compte_id}/note`, types.ADD_COMMENT_SUCCESS, comment);
+  };
 };
 
 export const fetchSuivi = (compte) => {

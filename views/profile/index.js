@@ -36,10 +36,11 @@ class Profile extends React.Component {
 
   render() {
     const iconSize = 24;
-    const {selectedProfile} = this.props;
+    const {selectedProfile, access} = this.props;
     const profile = selectedProfile;
     return (
       <View>
+        {access.contact > 1 &&
         <Toolbar
           leftElement="arrow-back"
           rightElement="mode-edit"
@@ -48,7 +49,16 @@ class Profile extends React.Component {
             this.props.navigator.pop();
           }}
           centerElement={'Profil'}
-        />
+        />}
+        {access.contact < 2 &&
+        <Toolbar
+          leftElement="arrow-back"
+          onLeftElementPress={() => {
+            this.props.navigator.pop();
+          }}
+          centerElement={'Profil'}
+        />}
+
         <Jumbotron primaryText={profile.cct_nom + ' ' + profile.cct_pre}
                    secoundaryText={profile.fonction_nom}/>
         {checkValue(profile.cct_tel) && <Text style={styles.primaryText}>Téléphones</Text>}
@@ -163,9 +173,10 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-  const {contacts} = state;
+  const {contacts, renderReducer} = state;
   return {
-    selectedProfile: contacts.selectedContact
+    selectedProfile: contacts.selectedContact,
+    access: renderReducer.access
   }
 };
 

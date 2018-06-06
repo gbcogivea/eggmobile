@@ -7,11 +7,13 @@ import {
 } from '@expo/ex-navigation';
 import { Ionicons } from '@expo/vector-icons';
 import { Router } from '../main';
+import { connect } from "react-redux";
+import * as Constantes from "../constantes";
 
-export default class DrawerNavigationExample extends Component {
+class DrawerNavigationExample extends Component {
   _renderHeader = () => {
     return (
-      <View style={{ height: 180, width: 300 }}>
+      <View style={{height: 180, width: 300}}>
         <Image
           source={require('../assets/sparkles.jpg')}
           style={styles.header}
@@ -33,9 +35,9 @@ export default class DrawerNavigationExample extends Component {
   };
 
   _renderIcon = (name: string, isSelected) => {
-    let extraStyle = { marginTop: 2 };
+    let extraStyle = {marginTop: 2};
     if (name === 'md-alert') {
-      extraStyle = { ...extraStyle, marginLeft: -3 };
+      extraStyle = {...extraStyle, marginLeft: -3};
     }
     return (
       <Ionicons
@@ -51,6 +53,7 @@ export default class DrawerNavigationExample extends Component {
   };
 
   render() {
+    const {access} = this.props;
     return (
       <DrawerNavigation
         navigatorUID="MainDrawer"
@@ -62,50 +65,55 @@ export default class DrawerNavigationExample extends Component {
           selectedStyle={styles.selectedItemStyle}
           renderTitle={isSelected => this._renderTitle('Accueil', isSelected)}
           renderIcon={isSelected => this._renderIcon('md-home', isSelected)}>
-          <StackNavigation id="home" initialRoute={Router.getRoute('home')} />
+          <StackNavigation id="home" initialRoute={Router.getRoute('home')}/>
         </DrawerNavigationItem>
+        {access.agenda === "Y" &&
         <DrawerNavigationItem
-            id="agenda"
-            selectedStyle={styles.selectedItemStyle}
-            renderTitle={isSelected => this._renderTitle('Agenda', isSelected)}
-            renderIcon={isSelected => this._renderIcon('md-calendar', isSelected)}>
-          <StackNavigation id="agenda" initialRoute={Router.getRoute('agenda')} />
-        </DrawerNavigationItem>
+          id="agenda"
+          selectedStyle={styles.selectedItemStyle}
+          renderTitle={isSelected => this._renderTitle('Agenda', isSelected)}
+          renderIcon={isSelected => this._renderIcon('md-calendar', isSelected)}>
+          <StackNavigation id="agenda" initialRoute={Router.getRoute('agenda')}/>
+        </DrawerNavigationItem>}
+        {access.contact > 0 &&
         <DrawerNavigationItem
-            id="contact"
-            selectedStyle={styles.selectedItemStyle}
-            renderTitle={isSelected => this._renderTitle('Contacts', isSelected)}
-            renderIcon={isSelected => this._renderIcon('md-contact', isSelected)}>
-          <StackNavigation id="contact" initialRoute={Router.getRoute('contact')} />
-        </DrawerNavigationItem>
+          id="contact"
+          selectedStyle={styles.selectedItemStyle}
+          renderTitle={isSelected => this._renderTitle('Contacts', isSelected)}
+          renderIcon={isSelected => this._renderIcon('md-contact', isSelected)}>
+          <StackNavigation id="contact" initialRoute={Router.getRoute('contact')}/>
+        </DrawerNavigationItem>}
         <DrawerNavigationItem
-            id="compte"
-            selectedStyle={styles.selectedItemStyle}
-            renderTitle={isSelected => this._renderTitle('Comptes', isSelected)}
-            renderIcon={isSelected => this._renderIcon('md-filing', isSelected)}>
-          <StackNavigation id="compte" initialRoute={Router.getRoute('compte')} />
+          id="compte"
+          selectedStyle={styles.selectedItemStyle}
+          renderTitle={isSelected => this._renderTitle('Comptes', isSelected)}
+          renderIcon={isSelected => this._renderIcon('md-filing', isSelected)}>
+          <StackNavigation id="compte" initialRoute={Router.getRoute('compte')}/>
         </DrawerNavigationItem>
+        {access.affaire > 0 &&
         <DrawerNavigationItem
-            id="affaire"
-            selectedStyle={styles.selectedItemStyle}
-            renderTitle={isSelected => this._renderTitle('Affaires', isSelected)}
-            renderIcon={isSelected => this._renderIcon('md-folder', isSelected)}>
-          <StackNavigation id="affaire" initialRoute={Router.getRoute('affaire')} />
-        </DrawerNavigationItem>
+          id="affaire"
+          selectedStyle={styles.selectedItemStyle}
+          renderTitle={isSelected => this._renderTitle('Affaires', isSelected)}
+          renderIcon={isSelected => this._renderIcon('md-folder', isSelected)}>
+          <StackNavigation id="affaire" initialRoute={Router.getRoute('affaire')}/>
+        </DrawerNavigationItem>}
+        {access.geolocalisation === "Y" &&
         <DrawerNavigationItem
-            id="geo"
-            selectedStyle={styles.selectedItemStyle}
-            renderTitle={isSelected => this._renderTitle('Geo', isSelected)}
-            renderIcon={isSelected => this._renderIcon('md-map', isSelected)}>
-          <StackNavigation id="geo" initialRoute={Router.getRoute('geo')} />
-        </DrawerNavigationItem>
+          id="geo"
+          selectedStyle={styles.selectedItemStyle}
+          renderTitle={isSelected => this._renderTitle('Geo', isSelected)}
+          renderIcon={isSelected => this._renderIcon('md-map', isSelected)}>
+          <StackNavigation id="geo" initialRoute={Router.getRoute('geo')}/>
+        </DrawerNavigationItem>}
+        {access.gedrep > 0 &&
         <DrawerNavigationItem
-            id="document"
-            selectedStyle={styles.selectedItemStyle}
-            renderTitle={isSelected => this._renderTitle('Documents', isSelected)}
-            renderIcon={isSelected => this._renderIcon('md-document', isSelected)}>
-          <StackNavigation id="document" initialRoute={Router.getRoute('document')} />
-        </DrawerNavigationItem>
+          id="document"
+          selectedStyle={styles.selectedItemStyle}
+          renderTitle={isSelected => this._renderTitle('Documents', isSelected)}
+          renderIcon={isSelected => this._renderIcon('md-document', isSelected)}>
+          <StackNavigation id="document" initialRoute={Router.getRoute('document')}/>
+        </DrawerNavigationItem>}
         <DrawerNavigationItem
           id="logout"
           selectedStyle={styles.selectedItemStyle}
@@ -141,3 +149,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#E8E8E8',
   },
 });
+
+const mapStateToProps = (state) => {
+  const {renderReducer} = state;
+  return {
+    access: renderReducer.access
+  }
+};
+
+export default connect(mapStateToProps)(DrawerNavigationExample);

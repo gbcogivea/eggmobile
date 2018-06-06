@@ -6,45 +6,67 @@
  */
 
 import React from 'react';
-import {ActionButton} from 'react-native-material-ui';
-import {Router} from '../main';
-import {withNavigation} from '@expo/ex-navigation';
+import { ActionButton } from 'react-native-material-ui';
+import {View} from 'react-native';
+import { Router } from '../main';
+import { withNavigation } from '@expo/ex-navigation';
 
 @withNavigation
 class MenuButtonComptes extends React.Component {
+  state = {
+    actions: []
+  };
 
-    _navigate = (key) => {
-        if (key === 'business') {
-            this.props.navigator.push(Router.getRoute('createAffaire'));
-        }
-        if (key === 'event') {
-            this.props.navigator.push(Router.getRoute('createEvenement'));
-        }
-        if (key === 'bookmark') {
-            this.props.navigator.push(Router.getRoute('createTache'));
-        }
-        if (key === 'phone') {
-            this.props.navigator.push(Router.getRoute('createContact'));
-        }
-        if (key === 'person') {
-            this.props.navigator.push(Router.getRoute('createCompte'));
-        }
-    };
-
-    render() {
-        return (
-            <ActionButton
-                actions={[{icon: 'person', label: 'Compte'},
-                    {icon: 'phone', label: 'Contacts'},
-                    {icon: 'bookmark', label: 'Tache'},
-                    {icon: 'event', label: 'Evenement'},
-                    {icon: 'business', label: 'Affaire'}]}
-                icon="add"
-                onPress={this._navigate}
-                transition="speedDial"
-            />
-        );
+  componentWillMount() {
+    const {access} = this.props;
+    if (access.affaire > 2) {
+      this.state.actions.push({icon: 'business', label: 'Affaire'});
     }
+    if (access.even > 2) {
+      this.state.actions.push({icon: 'event', label: 'Evenement'});
+    }
+    if (access.tache > 2) {
+      this.state.actions.push({icon: 'bookmark', label: 'Tache'});
+    }
+    if (access.contact > 2) {
+      this.state.actions.push({icon: 'phone', label: 'Contacts'});
+    }
+    if (access.compte > 2) {
+      this.state.actions.push({icon: 'person', label: 'Compte'});
+    }
+  }
+
+  _navigate = (key) => {
+    if (key === 'business') {
+      this.props.navigator.push(Router.getRoute('createAffaire'));
+    }
+    if (key === 'event') {
+      this.props.navigator.push(Router.getRoute('createEvenement'));
+    }
+    if (key === 'bookmark') {
+      this.props.navigator.push(Router.getRoute('createTache'));
+    }
+    if (key === 'phone') {
+      this.props.navigator.push(Router.getRoute('createContact'));
+    }
+    if (key === 'person') {
+      this.props.navigator.push(Router.getRoute('createCompte'));
+    }
+  };
+
+  render() {
+    return (
+      <View>
+        {this.state.actions.length > 0 &&
+        <ActionButton
+          actions={this.state.actions}
+          onPress={this._navigate}
+          transition="speedDial"
+          icon="add"
+        />}
+      </View>
+    );
+  }
 }
 
 export default MenuButtonComptes;

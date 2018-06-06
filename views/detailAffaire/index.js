@@ -27,9 +27,11 @@ class DetailCompteScreen extends React.Component {
   };
 
   render() {
-    const {selectedAffaire} = this.props;
+    const {selectedAffaire, access} = this.props;
     return (
       <View style={styles.container}>
+
+        {access.affaire > 1 &&
         <Toolbar
           leftElement="arrow-back"
           onLeftElementPress={() => {
@@ -38,7 +40,15 @@ class DetailCompteScreen extends React.Component {
           centerElement={'Affaire'}
           rightElement="mode-edit"
           onRightElementPress={() => this.props.navigator.push(Router.getRoute('createAffaire', {selectedAffaire}))}
-        />
+        />}
+        {access.affaire < 2 &&
+        <Toolbar
+          leftElement="arrow-back"
+          onLeftElementPress={() => {
+            this.props.navigator.pop();
+          }}
+          centerElement={'Affaire'}
+        />}
         <Jumbotron affaire={selectedAffaire}/>
         {/*ca_t * 3 mb_t * 3*/}
         <ListItem
@@ -72,7 +82,7 @@ class DetailCompteScreen extends React.Component {
           description="compte et contact de l'affaire"
           onPress={() => this._goToScreen('compteEtContact', selectedAffaire)}
         />
-        <MenuButtonComptes/>
+        <MenuButtonComptes access={this.props.access}/>
       </View>
     );
   }
@@ -93,9 +103,10 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-  const {affaires} = state;
+  const {affaires, renderReducer} = state;
   return {
-    selectedAffaire: affaires.selectedAffaire
+    selectedAffaire: affaires.selectedAffaire,
+    access: renderReducer.access
   }
 };
 

@@ -170,7 +170,7 @@ class ComptesScreen extends React.Component {
                     onEndReached={() => this._fetch()}
                     enableEmptySections={true}
                 />
-                <MenuButtonComptes/>
+                <MenuButtonComptes access={this.props.access}/>
             </View>
         );
     }
@@ -195,9 +195,10 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-    const {comptes} = state;
+    const {comptes, renderReducer} = state;
     return {
-        data: comptes.comptes
+        data: comptes.comptes,
+      access: renderReducer.access
     }
 };
 
